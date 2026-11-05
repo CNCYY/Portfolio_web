@@ -251,7 +251,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
       {/* 卡带：顶部织带随弹性伸缩（object-fit fill 拉伸织纹），底部金属夹固定尺寸 */}
       <div
         ref={ropeRef}
-        className="absolute left-1/2 top-0 origin-top -ml-[36px] w-[72px]"
+        className="absolute left-1/2 top-0 origin-top -ml-[36px] w-[72px] z-10"
         style={{ height: ropeLength }}
       >
         <img
