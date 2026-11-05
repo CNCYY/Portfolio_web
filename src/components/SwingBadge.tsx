@@ -11,6 +11,8 @@ const CLAMP_H = 82;
  * 不沿卡带滑动——相当于挂绳穿孔后卡死在小矩形孔之间
  */
 const CARD_HANG = 31;
+/** 拖拽可拉扯的最大倾角（约 10°） */
+const MAX_THETA = 0.175;
 
 interface SwingBadgeProps {
   /** 支点（顶部）到卡片挂点的静止绳长 */
@@ -207,7 +209,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
       const rect = root.getBoundingClientRect();
       const px = e.clientX - (rect.left + rect.width / 2);
       const py = e.clientY - rect.top;
-      s.targetTheta = Math.max(-1.35, Math.min(1.35, Math.atan2(px, Math.max(py, 24))));
+      s.targetTheta = Math.max(-MAX_THETA, Math.min(MAX_THETA, Math.atan2(px, Math.max(py, 24))));
       s.targetR = Math.max(restLen * 0.55, Math.min(restLen * 2.0, Math.hypot(px, py)));
       s.settled = false;
       startLoop();
