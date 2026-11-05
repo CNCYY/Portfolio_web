@@ -11,8 +11,8 @@ const CLAMP_H = 82;
  * 不沿卡带滑动——相当于挂绳穿孔后卡死在小矩形孔之间
  */
 const CARD_HANG = 31;
-/** 拖拽可拉扯的最大倾角（约 5°） */
-const MAX_THETA = 0.0873;
+/** 拖拽可拉扯的最大倾角（约 4°） */
+const MAX_THETA = 0.0698;
 
 interface SwingBadgeProps {
   /** 支点（顶部）到卡片挂点的静止绳长 */
