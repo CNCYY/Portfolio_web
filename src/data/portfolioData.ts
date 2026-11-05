@@ -1,13 +1,11 @@
 import { Project } from '../types';
 
 export const DESIGNER_INFO = {
-  name: 'CNCYY (Jelly)',
-  role: 'PRODUCT & INTERACTION DESIGNER / CREATIVE DEVELOPER · SHENZHEN / REMOTE',
-  avatar: '/assets/aistudio/AI________2__513a0d82.jpg',
+  name: '你好我是陈滢影',
+  role: 'A 2026 Portfolio by a *Gapper*',
+  avatar: '/assets/aistudio/avatar_chen.png',
   bioIntro:
     '专注于 AI 工具落地、拟物数字文具与高趣味性交互原型设计。致力于用代码与设计消除繁琐流程，让数字产品拥有实体纸质般的触感与温度。',
-  bioDetail:
-    '独立全流程构思与开发多款提效工具与创新交互原型，涵盖 SVGA 动画自动化注入、AI 礼物文生图工作流封装、拟物撕拉折叠卡及复古小票打印机。',
   stats: [
     { label: 'GitHub @CNCYY', value: '' },
     { label: '线上开源工具', value: '2 款' },
