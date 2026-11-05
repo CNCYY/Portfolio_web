@@ -10,7 +10,7 @@ const CLAMP_H = 82;
  * 卡套顶边锁定在卡带的这个点上（夹嘴对准卡套孔位），摆动时卡片绕孔位转动、
  * 不沿卡带滑动——相当于挂绳穿孔后卡死在小矩形孔之间
  */
-const CARD_HANG = 36;
+const CARD_HANG = 31;
 
 interface SwingBadgeProps {
   /** 支点（顶部）到卡片挂点的静止绳长 */
