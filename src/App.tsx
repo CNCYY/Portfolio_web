@@ -4,6 +4,7 @@ import { ChapterPages } from './components/ChapterPages';
 import { StickyBottomFolderTabs, FolderTab } from './components/StickyBottomFolderTabs';
 import { SearchModal } from './components/SearchModal';
 import { StickerBoard } from './components/StickerBoard';
+import { SwingBadge } from './components/SwingBadge';
 import { Tooltip } from './components/ui/tooltip-card';
 import { PROJECTS } from './data/portfolioData';
 import { CHAPTERS, PROJECT_TO_CHAPTER } from './data/chapters';
@@ -194,34 +195,36 @@ export default function App() {
         className="relative overflow-hidden min-h-[50vh] sm:min-h-[60vh] snap-start snap-always flex border-t border-stone-200 pb-16 bg-stone-100/30"
       >
         <div className="max-w-7xl mx-auto px-6 w-full flex flex-col sm:flex-row items-start justify-between gap-8">
-          {/* 左侧：CONNECT ME 卡套，顶边贴齐上一节底边，斜躺纸面 */}
+          {/* 左侧：CONNECT ME 卡套，从 footer 顶边垂下的物理挂牌 */}
           <div className="flex w-full sm:w-auto items-center justify-center sm:justify-start self-start">
-            <div className="relative w-[430px] sm:w-[600px] -rotate-[7deg] select-none">
-              <img
-                src={footerConnectCard}
-                alt="Contact me 卡套"
-                draggable={false}
-                className="w-full h-auto block"
-              />
-              {/* 卡面上的邮箱：点击复制，悬停出现解释卡片 */}
-              <Tooltip
-                content={emailCopied ? '已复制' : '点击复制'}
-                align="right"
-                side="bottom"
-                tone="#FAF6ED"
-                hug
-                containerClassName="absolute right-[9.5%] top-[53%] -translate-y-1/2"
-              >
-                <button
-                  type="button"
-                  onClick={copyEmail}
-                  className="block font-sans font-semibold tracking-tight text-[12px] sm:text-[17px] cursor-pointer transition-opacity hover:opacity-70"
-                  style={{ color: '#514961' }}
+            <SwingBadge>
+              <div className="relative w-[430px] sm:w-[600px] select-none">
+                <img
+                  src={footerConnectCard}
+                  alt="Contact me 卡套"
+                  draggable={false}
+                  className="w-full h-auto block"
+                />
+                {/* 卡面上的邮箱：点击复制，悬停出现解释卡片 */}
+                <Tooltip
+                  content={emailCopied ? '已复制' : '点击复制'}
+                  align="right"
+                  side="bottom"
+                  tone="#FAF6ED"
+                  hug
+                  containerClassName="absolute right-[9.5%] top-[53%] -translate-y-1/2"
                 >
-                  {CONTACT_EMAIL}
-                </button>
-              </Tooltip>
-            </div>
+                  <button
+                    type="button"
+                    onClick={copyEmail}
+                    className="block font-sans font-semibold tracking-tight text-[12px] sm:text-[17px] cursor-pointer transition-opacity hover:opacity-70"
+                    style={{ color: '#514961' }}
+                  >
+                    {CONTACT_EMAIL}
+                  </button>
+                </Tooltip>
+              </div>
+            </SwingBadge>
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-xs text-stone-500 font-sans self-center">
