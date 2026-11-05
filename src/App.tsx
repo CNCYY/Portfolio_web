@@ -212,7 +212,7 @@ export default function App() {
                   side="bottom"
                   tone="#FAF6ED"
                   hug
-                  containerClassName="absolute left-[64.97%] top-[49%] w-[28%] text-center"
+                  containerClassName="absolute left-[64.64%] top-[49%] w-[28%] text-center"
                 >
                   <button
                     type="button"
