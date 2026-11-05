@@ -205,9 +205,9 @@ export default function App() {
                   draggable={false}
                   className="w-full h-auto block"
                 />
-                {/* 卡面上的邮箱地址：展示用 */}
+                {/* 卡面上的邮箱地址：展示在"邮箱"按钮正下方 */}
                 <span
-                  className="absolute left-[36%] top-[50%] w-[58%] text-center font-sans font-semibold tracking-tight text-[13px] sm:text-[18px] pointer-events-none"
+                  className="absolute left-[62%] top-[49%] w-[28%] text-center font-sans font-semibold tracking-tight text-[11px] sm:text-[14px] pointer-events-none"
                   style={{ color: '#514961' }}
                 >
                   {CONTACT_EMAIL}
@@ -219,7 +219,7 @@ export default function App() {
                   side="bottom"
                   tone="#FAF6ED"
                   hug
-                  containerClassName="absolute left-[75.5%] top-[38.6%] w-[15.8%] h-[8.8%]"
+                  containerClassName="absolute left-[76.2%] top-[40.3%] w-[11.7%] h-[6.9%]"
                 >
                   <button
                     type="button"
