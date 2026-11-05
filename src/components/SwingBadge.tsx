@@ -238,6 +238,17 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
 
     card.addEventListener('pointerdown', onDown);
 
+    // 鼠标悬停时轻微晃动：给钟摆一个小的角速度脉冲，随阻尼自然回落
+    const onHover = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return;
+      if (!s.entered || s.dragging) return;
+      if (Math.abs(s.omega) > 0.45) return; // 已在明显摆动时不叠加
+      s.omega += s.omega >= 0 ? 0.22 : -0.22;
+      s.settled = false;
+      startLoop();
+    };
+    card.addEventListener('pointerenter', onHover);
+
     return () => {
       stopLoop();
       io.disconnect();
@@ -246,6 +257,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
       window.removeEventListener('scroll', checkVisible);
       window.removeEventListener('resize', checkVisible);
       card.removeEventListener('pointerdown', onDown);
+      card.removeEventListener('pointerenter', onHover);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
       window.removeEventListener('pointercancel', onUp);
