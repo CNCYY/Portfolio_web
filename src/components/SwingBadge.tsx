@@ -20,9 +20,9 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
   const cardRef = useRef<HTMLDivElement>(null);
 
   const st = useRef({
-    theta: -0.95,            // 摆角（弧度，0 = 竖直下垂）
+    theta: -0.4,             // 摆角（弧度，0 = 竖直下垂）：小倾角，重心放在绳的弹性拉伸上
     omega: 0,                // 角速度
-    r: ropeLength * 0.45,    // 当前绳长
+    r: ropeLength * 0.35,    // 当前绳长：初始收得更短，入场时重力拉伸更明显
     rVel: 0,                 // 绳长变化速度
     dragging: false,
     entered: false,          // 是否已触发入场
@@ -42,8 +42,8 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
     const restLen = ropeLength;
     const G = 2600;          // 重力 px/s²
     const SPRING_K = 220;    // 绳子弹性
-    const SPRING_DAMP = 16;
-    const ANG_DAMP = 1.35;   // 摆动阻尼
+    const SPRING_DAMP = 11;  // 弹簧阻尼：偏小，入场时绳的拉伸回弹更弹、更有蹦床感
+    const ANG_DAMP = 1.9;    // 摆动阻尼：偏大，侧摆快速收敛，只留轻微晃动
 
     const s = st.current;
     const root = rootRef.current!;
@@ -142,6 +142,36 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
     );
     io.observe(root);
 
+    // 兜底触发：自定义 snap 滚动容器等场景下 IO 回调偶发不触发，
+    // 监听实际滚动容器的 scroll 事件做几何可见性检查
+    let scroller: HTMLElement | null = root.parentElement;
+    while (scroller) {
+      const oy = getComputedStyle(scroller).overflowY;
+      if (oy === 'auto' || oy === 'scroll') break;
+      scroller = scroller.parentElement;
+    }
+    const detachFallback = () => {
+      scroller?.removeEventListener('scroll', checkVisible);
+      window.removeEventListener('scroll', checkVisible);
+      window.removeEventListener('resize', checkVisible);
+      window.clearTimeout(fallbackTimer);
+    };
+    const checkVisible = () => {
+      if (s.entered || s.dragging) return;
+      const rect = root.getBoundingClientRect();
+      if (rect.height === 0) return;
+      const visibleH = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+      if (visibleH / rect.height >= 0.3) {
+        s.entered = true;
+        startLoop();
+        detachFallback();
+      }
+    };
+    const fallbackTimer = window.setTimeout(checkVisible, 400);
+    scroller?.addEventListener('scroll', checkVisible, { passive: true });
+    window.addEventListener('scroll', checkVisible, { passive: true });
+    window.addEventListener('resize', checkVisible, { passive: true });
+
     // 拖拽：超过 6px 才算拖拽，否则保留点击（邮箱复制）
     const onMove = (e: PointerEvent) => {
       if (e.pointerId !== s.pointerId) return;
@@ -186,6 +216,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
     return () => {
       stopLoop();
       io.disconnect();
+      detachFallback();
       card.removeEventListener('pointerdown', onDown);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
