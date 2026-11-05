@@ -205,28 +205,24 @@ export default function App() {
                   draggable={false}
                   className="w-full h-auto block"
                 />
-                {/* 卡面上的邮箱地址：展示在"邮箱"按钮正下方 */}
-                <span
-                  className="absolute left-[62%] top-[49%] w-[28%] text-center font-sans font-semibold tracking-tight text-[11px] sm:text-[14px] pointer-events-none"
-                  style={{ color: '#514961' }}
-                >
-                  {CONTACT_EMAIL}
-                </span>
-                {/* 卡面上的"邮箱"按钮：点击复制，悬停出现解释卡片 */}
+                {/* 邮箱地址：点击复制，悬停出现解释卡片 */}
                 <Tooltip
                   content={emailCopied ? '已复制' : '点击复制'}
                   align="right"
                   side="bottom"
                   tone="#FAF6ED"
                   hug
-                  containerClassName="absolute left-[76.2%] top-[40.3%] w-[11.7%] h-[6.9%]"
+                  containerClassName="absolute left-[65.3%] top-[49%] w-[28%] text-center"
                 >
                   <button
                     type="button"
                     onClick={copyEmail}
                     aria-label="复制邮箱地址"
-                    className="block w-full h-full cursor-pointer transition-opacity hover:opacity-70"
-                  />
+                    className="block w-full font-sans font-semibold tracking-tight text-[11px] sm:text-[14px] cursor-pointer transition-opacity hover:opacity-70"
+                    style={{ color: '#514961' }}
+                  >
+                    {CONTACT_EMAIL}
+                  </button>
                 </Tooltip>
               </div>
             </SwingBadge>
