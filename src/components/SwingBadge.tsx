@@ -142,29 +142,40 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
     );
     io.observe(root);
 
-    // 兜底触发：自定义 snap 滚动容器等场景下 IO 回调偶发不触发，
-    // 监听实际滚动容器的 scroll 事件做几何可见性检查
+    // 兜底触发 + 重播控制：自定义 snap 滚动容器等场景下 IO 回调偶发不触发，
+    // 监听实际滚动容器的 scroll 事件做几何可见性检查；
+    // 完全离开视口时复位到收起姿态，再次进入即重播下落摆动
     let scroller: HTMLElement | null = root.parentElement;
     while (scroller) {
       const oy = getComputedStyle(scroller).overflowY;
       if (oy === 'auto' || oy === 'scroll') break;
       scroller = scroller.parentElement;
     }
-    const detachFallback = () => {
-      scroller?.removeEventListener('scroll', checkVisible);
-      window.removeEventListener('scroll', checkVisible);
-      window.removeEventListener('resize', checkVisible);
-      window.clearTimeout(fallbackTimer);
-    };
+    const initTheta = -0.4;
+    const initR = restLen * 0.35;
     const checkVisible = () => {
-      if (s.entered || s.dragging) return;
+      if (s.dragging) return;
       const rect = root.getBoundingClientRect();
       if (rect.height === 0) return;
       const visibleH = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
-      if (visibleH / rect.height >= 0.3) {
-        s.entered = true;
-        startLoop();
-        detachFallback();
+      const ratio = visibleH / rect.height;
+      if (ratio >= 0.3) {
+        if (!s.entered) {
+          s.entered = true; // 从收起姿态释放，落下并荡动（每次重新进入都重播）
+          startLoop();
+        } else if (!s.settled) {
+          startLoop();
+        }
+      } else if (ratio <= 0.02 && s.entered) {
+        // 完全离开视口：停帧并复位到收起姿态
+        stopLoop();
+        s.theta = initTheta;
+        s.omega = 0;
+        s.r = initR;
+        s.rVel = 0;
+        s.entered = false;
+        s.settled = false;
+        writePose();
       }
     };
     const fallbackTimer = window.setTimeout(checkVisible, 400);
@@ -216,7 +227,10 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
     return () => {
       stopLoop();
       io.disconnect();
-      detachFallback();
+      window.clearTimeout(fallbackTimer);
+      scroller?.removeEventListener('scroll', checkVisible);
+      window.removeEventListener('scroll', checkVisible);
+      window.removeEventListener('resize', checkVisible);
       card.removeEventListener('pointerdown', onDown);
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('pointerup', onUp);
