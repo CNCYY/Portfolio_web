@@ -1,4 +1,12 @@
 import React, { useEffect, useRef } from 'react';
+import strapRibbon from '../assets/lanyard-ribbon.png';
+import strapClamp from '../assets/lanyard-clamp.png';
+
+/** 卡带金属夹（O环+夹子）在绳宽 72px 下的显示高度 */
+const CLAMP_W = 72;
+const CLAMP_H = 82;
+/** 夹子底部与卡套顶部的重叠量，形成"夹住"效果 */
+const CLAMP_OVERLAP = 26;
 
 interface SwingBadgeProps {
   /** 支点（顶部）到卡片挂点的静止绳长 */
@@ -22,7 +30,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
   const st = useRef({
     theta: -0.4,             // 摆角（弧度，0 = 竖直下垂）：小倾角，重心放在绳的弹性拉伸上
     omega: 0,                // 角速度
-    r: ropeLength * 0.35,    // 当前绳长：初始收得更短，入场时重力拉伸更明显
+    r: ropeLength * 0.55,    // 当前绳长：初始收得较短，入场时织带被重力拉长更明显
     rVel: 0,                 // 绳长变化速度
     dragging: false,
     entered: false,          // 是否已触发入场
@@ -52,7 +60,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
 
     const writePose = () => {
       const dx = s.r * Math.sin(s.theta);
-      const dy = s.r * Math.cos(s.theta) - restLen;
+      const dy = s.r * Math.cos(s.theta) - restLen - CLAMP_OVERLAP;
       card.style.transform = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px) rotate(${s.theta.toFixed(4)}rad)`;
       rope.style.height = `${s.r.toFixed(2)}px`;
       rope.style.transform = `rotate(${s.theta.toFixed(4)}rad)`;
@@ -152,7 +160,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
       scroller = scroller.parentElement;
     }
     const initTheta = -0.4;
-    const initR = restLen * 0.35;
+    const initR = restLen * 0.55;
     const checkVisible = () => {
       if (s.dragging) return;
       const rect = root.getBoundingClientRect();
@@ -196,7 +204,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
       const px = e.clientX - (rect.left + rect.width / 2);
       const py = e.clientY - rect.top;
       s.targetTheta = Math.max(-1.35, Math.min(1.35, Math.atan2(px, Math.max(py, 24))));
-      s.targetR = Math.max(restLen * 0.4, Math.min(restLen * 2.0, Math.hypot(px, py)));
+      s.targetR = Math.max(restLen * 0.55, Math.min(restLen * 2.0, Math.hypot(px, py)));
       s.settled = false;
       startLoop();
     };
@@ -239,17 +247,30 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
   }, [ropeLength]);
 
   return (
-    <div ref={rootRef} className="relative w-fit" style={{ paddingTop: ropeLength }}>
-      {/* 挂绳：锚在顶部支点，随摆角旋转、随弹性伸缩 */}
+    <div ref={rootRef} className="relative w-fit" style={{ paddingTop: ropeLength - CLAMP_OVERLAP }}>
+      {/* 卡带：顶部织带随弹性伸缩（object-fit fill 拉伸织纹），底部金属夹固定尺寸 */}
       <div
         ref={ropeRef}
-        className="absolute left-1/2 top-0 w-[3px] -ml-[1.5px] rounded-full bg-stone-800 origin-top"
+        className="absolute left-1/2 top-0 origin-top -ml-[36px] w-[72px]"
+        style={{ height: ropeLength }}
       >
-        {/* 绳端金属夹 */}
-        <span className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 block w-[11px] h-[15px] rounded-[3px] bg-gradient-to-b from-stone-300 to-stone-500 border border-stone-600/60 shadow-sm" />
+        <img
+          src={strapRibbon}
+          alt=""
+          draggable={false}
+          className="block w-full select-none"
+          style={{ height: `max(0px, calc(100% - ${CLAMP_H}px))`, objectFit: 'fill' }}
+        />
+        <img
+          src={strapClamp}
+          alt=""
+          draggable={false}
+          className="block w-full select-none"
+          style={{ height: CLAMP_H, objectFit: 'fill' }}
+        />
       </div>
 
-      {/* 工牌卡片：变换原点为顶部挂点 */}
+      {/* 卡套：变换原点为顶部挂点（金属夹处） */}
       <div
         ref={cardRef}
         className={`relative mx-auto origin-top will-change-transform select-none ${className}`}

@@ -8,7 +8,7 @@ import { SwingBadge } from './components/SwingBadge';
 import { Tooltip } from './components/ui/tooltip-card';
 import { PROJECTS } from './data/portfolioData';
 import { CHAPTERS, PROJECT_TO_CHAPTER } from './data/chapters';
-import footerConnectCard from './assets/footer-connect-card.png';
+import cardHolder from './assets/card-holder.png';
 
 const CONTACT_EMAIL = '961947088@qq.com';
 
@@ -197,31 +197,36 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 w-full flex flex-col sm:flex-row items-start justify-between gap-8">
           {/* 左侧：CONNECT ME 卡套，从 footer 顶边垂下的物理挂牌 */}
           <div className="flex w-full sm:w-auto items-center justify-center sm:justify-start self-start">
-            <SwingBadge>
+            <SwingBadge ropeLength={150}>
               <div className="relative w-[430px] sm:w-[600px] select-none">
                 <img
-                  src={footerConnectCard}
+                  src={cardHolder}
                   alt="Contact me 卡套"
                   draggable={false}
                   className="w-full h-auto block"
                 />
-                {/* 卡面上的邮箱：点击复制，悬停出现解释卡片 */}
+                {/* 卡面上的邮箱地址：展示用 */}
+                <span
+                  className="absolute left-[36%] top-[50%] w-[58%] text-center font-sans font-semibold tracking-tight text-[13px] sm:text-[18px] pointer-events-none"
+                  style={{ color: '#514961' }}
+                >
+                  {CONTACT_EMAIL}
+                </span>
+                {/* 卡面上的"邮箱"按钮：点击复制，悬停出现解释卡片 */}
                 <Tooltip
                   content={emailCopied ? '已复制' : '点击复制'}
                   align="right"
                   side="bottom"
                   tone="#FAF6ED"
                   hug
-                  containerClassName="absolute right-[9.5%] top-[53%] -translate-y-1/2"
+                  containerClassName="absolute left-[75.5%] top-[38.6%] w-[15.8%] h-[8.8%]"
                 >
                   <button
                     type="button"
                     onClick={copyEmail}
-                    className="block font-sans font-semibold tracking-tight text-[12px] sm:text-[17px] cursor-pointer transition-opacity hover:opacity-70"
-                    style={{ color: '#514961' }}
-                  >
-                    {CONTACT_EMAIL}
-                  </button>
+                    aria-label="复制邮箱地址"
+                    className="block w-full h-full cursor-pointer transition-opacity hover:opacity-70"
+                  />
                 </Tooltip>
               </div>
             </SwingBadge>
