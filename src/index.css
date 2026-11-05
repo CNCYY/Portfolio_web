@@ -1,0 +1,509 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #fcfbf9;
+    color: #1c1917;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: #e5a99b;
+    color: #1c1917;
+  }
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Scroll snap physics & smooth momentum */
+#scroll-snap-viewport {
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+.snap-always {
+  scroll-snap-stop: always;
+}
+
+/* Subtle editorial paper grain & shadow depths */
+.shadow-manila {
+  box-shadow: 0 4px 20px -2px rgba(44, 39, 36, 0.08), 0 1px 3px 0 rgba(44, 39, 36, 0.05);
+}
+
+.shadow-folder-active {
+  box-shadow: 0 12px 32px -4px rgba(44, 39, 36, 0.12), 0 4px 10px -2px rgba(44, 39, 36, 0.06);
+}
+
+.shadow-polaroid {
+  box-shadow: 0 10px 25px -5px rgba(28, 25, 23, 0.15), 0 4px 6px -2px rgba(28, 25, 23, 0.05);
+}
+
+/* Hide scrollbar for clean horizontal drawer scrolling while keeping gesture ability */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ══ Dot grid background ═══════════════════════════════════
+   米色底 + 细浅灰点阵（15px 密网格）。
+   与容器背景同层渲染，滚动时固定、内容从上方滑过，无层叠遮挡问题。
+   .dot-grid      → 原始点色（封面、封底）
+   .dot-grid-soft → 更浅点色（正文四页专用，覆盖父级背景） */
+.dot-grid {
+  background-color: #fcfbf9;
+  background-image: radial-gradient(circle, #dedede 1px, transparent 1px);
+  background-size: 15px 15px;
+}
+
+.dot-grid-soft {
+  background-color: #fcfbf9;
+  background-image: radial-gradient(circle, #e7e7e6 1px, transparent 1px);
+  background-size: 15px 15px;
+}
+
+/* ══ Soft-edged panel ══════════════════════════════════════
+   列表/内容面板：淡黄底 + 边缘虚化（同色外扩投影，向外渐隐
+   融入点阵背景，内容不受影响）。 */
+.panel-soft {
+  background: #fcfbf9;
+  border-radius: 16px;
+  box-shadow: 0 0 30px 22px #fcfbf9;
+}
+
+/* ══ Fading vertical rule ══════════════════════════════════
+   列表与内容之间的细分隔线：上下两端渐隐，轻轻一条。 */
+.vline-fade {
+  position: relative;
+}
+
+.vline-fade::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 22%;
+  bottom: 22%;
+  width: 1px;
+  background: #ccc8c0;
+  pointer-events: none;
+}
+
+/* ══ Image compare ════════════════════════════════════════ */
+/* Bencho's design tokens, mapped to this project's own system and
+   defined locally on .cmp so nothing leaks out:
+   --card      → stone-50  (panel ground behind the pictures)
+   --fill-on   → stone-900 (ink on filled surfaces, knob icon)
+   --fill-slab → white     (knob slab)
+   --font-ui   → Plus Jakarta Sans (project sans)
+   --ink       → stone-900
+   --signal    → amber-600 (focus ring, matches the amber accents) */
+.cmp {
+  --card: #fafaf9;
+  --fill-on: #1c1917;
+  --fill-slab: #ffffff;
+  --font-ui: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --ink: #1c1917;
+  --signal: #d97706;
+
+  position: relative;
+  overflow: hidden;
+  touch-action: none;
+  cursor: ew-resize;
+  outline: none;
+  user-select: none;
+  -webkit-user-select: none;
+  /* no painted ground: the artwork is transparent PNG and floats
+     on the page background */
+  background: transparent;}
+
+.cmp:focus-visible { box-shadow: 0 0 0 2px var(--signal, #2231dd); }
+
+.cmp-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  -webkit-user-drag: none;}
+
+/* no drift now: two separate photographs have to stay exactly in
+   register, or the x-ray stops lining up with the picture */
+.cmp-before { position: absolute; inset: 0; }
+
+.cmp-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(23, 24, 26, 0.36);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 500;
+  pointer-events: none;
+  letter-spacing: 0em;}
+
+.cmp-tag.cmp-right { left: auto; right: 12px; }
+
+/* the line is drawn, so it can bend: a 2px white curve with a
+   soft glow, over the whole block */
+.cmp-line {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  pointer-events: none;
+  /* a dark cast instead of a white glow: the line now crosses the
+     pale page background around the transparent artwork */
+  filter: drop-shadow(0 1px 2px rgba(23, 24, 26, 0.45));}
+
+.cmp-line path { fill: none; stroke: #fff; stroke-width: 2; }
+
+.cmp-grip { position: absolute; top: 0; bottom: 0; width: 0; pointer-events: none; }
+
+.cmp-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 36px;
+  height: 36px;
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--fill-slab, var(--card));
+  color: var(--fill-on, var(--ink));
+  border: 1px solid rgba(23, 24, 26, 0.12);
+  box-shadow: 0 2px 12px rgba(23, 24, 26, 0.25);
+  transition: scale 220ms cubic-bezier(0.24, 1.34, 0.38, 1);}
+
+.cmp:hover .cmp-knob { scale: 1.08; }
+
+/* ══ Gallery ════════════════════════════════════════════════
+   横向缓慢滚动的图片廊：深色底，容器宽高与横向视频一致
+   （宽度撑满右列、aspect-video 定高）。图片高低错落、
+   上方 mono 编号，缓慢匀速左移、无缝循环——列表在轨道里
+   渲染两份，translateX(-50%) 时第二份恰好接上第一份
+   （间距用 margin 保证 -50% 无累计误差）。悬停暂停；
+   prefers-reduced-motion 时静止。 */
+.gal {
+  overflow: hidden;
+  border-radius: 16px;
+  background: #1c1917;
+  aspect-ratio: 16 / 9;
+  display: flex;
+  align-items: center;}
+
+.gal-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  animation: gal-scroll 60s linear infinite;}
+
+.gal:hover .gal-track { animation-play-state: paused; }
+
+.gal[data-still] .gal-track { animation: none; }
+
+.gal-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-right: 30px;}
+
+.gal-item[data-alt] { transform: translateY(26px); }
+
+.gal-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(250, 250, 249, 0.45);
+  padding-left: 2px;}
+
+.gal-img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-height: 150px;
+  max-width: 240px;
+  flex-shrink: 0;
+  object-fit: contain;
+  border-radius: 6px;
+  user-select: none;}
+
+@keyframes gal-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.cmp[data-held] .cmp-knob { scale: 0.9; }
+
+/* ══ Receipt board lightbox ═════════════════════════════════
+   小票灯箱（AcidSquares 式表面物理，风场由组件内 rAF 驱动）：
+   中层 .receipt-card 带各自基准倾角 --r，以图钉（顶部中心）为支点；
+   最内层 .receipt-float 的 transform 交给 rAF——静置波浪、
+   鼠标掀起、点击涟漪，与外层 intro 浮现动画分层互不打架。 */
+.receipt-card {
+  cursor: default;
+  position: relative;
+  transform: rotate(var(--r, 0deg));
+  transform-origin: 50% 0;
+}
+
+.receipt-float {
+  transform-origin: 50% 0;
+  will-change: transform;
+}
+
+.receipt-pin-img {
+  transition: filter 0.3s ease;
+}
+
+.receipt-card:hover .receipt-pin-img {
+  filter: drop-shadow(0 22px 38px rgba(28, 25, 23, 0.22));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-float { transform: none !important; }
+}
+
+/* ══ Core value highlight ═══════════════════════════════════
+   核心价值荧光笔高亮段：滚入视口 → 左光标闪 2 次 → 整块高亮从
+   左向右扫过 → 扫完整块淡出、切换为逐行贴合文字的荧光条，第一
+   行首字左侧与最后一行末字符右侧浮现常亮选中句柄（圆点+竖线）。
+   每页通过 tone class 换色（--cv-bg/--cv-line）。 */
+.core-value {
+  position: relative;
+  /* 建立独立层叠上下文，防止 z-index:-1 的高亮块逃逸到祖先背景之下被盖住 */
+  isolation: isolate;
+  padding: 7px 22px 7px 18px;
+}
+
+.core-value .core-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--cv-bg, #f6f0cd);
+  border-radius: 6px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+.core-value.is-played .core-fill {
+  /* 扫过在「闪 2 次」结束后起跑（2 × 0.9s），扫完淡出让位给逐行荧光条 */
+  animation:
+    cv-sweep 1.15s cubic-bezier(0.65, 0, 0.35, 1) 1.8s forwards,
+    cv-hide 0.3s ease 2.95s forwards;
+}
+
+@keyframes cv-sweep {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* 阶段二：逐行荧光条（box-decoration-break: clone 让多行各自成条）
+   文字始终可见，仅背景色在扫完后淡入 */
+.core-value .core-text {
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 3px 6px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  background-color: transparent;
+}
+
+.core-value.is-played .core-text {
+  animation: cv-bg 0.3s ease 2.95s forwards;
+}
+
+@keyframes cv-bg {
+  from { background-color: transparent; }
+  to { background-color: var(--cv-bg, #f6f0cd); }
+}
+
+/* 选中句柄：起点圆点朝上、终点圆点朝下，扫完后常亮 */
+.core-value .core-text::before,
+.core-value .core-text::after {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 1.35em;
+  opacity: 0;
+}
+
+.core-value .core-text::before {
+  background:
+    radial-gradient(circle 4px at 50% 4px, var(--cv-line, #c9a227) 99%, transparent) top center / 9px 9px no-repeat,
+    linear-gradient(var(--cv-line, #c9a227), var(--cv-line, #c9a227)) center / 2px calc(100% - 5px) no-repeat;
+  margin-left: -7px;
+  /* 右侧只回拉 2px，给首字留出 5px 呼吸间隙 */
+  margin-right: -2px;
+  vertical-align: top;
+}
+
+.core-value .core-text::after {
+  background:
+    radial-gradient(circle 4px at 50% calc(100% - 4px), var(--cv-line, #c9a227) 99%, transparent) bottom center / 9px 9px no-repeat,
+    linear-gradient(var(--cv-line, #c9a227), var(--cv-line, #c9a227)) center / 2px calc(100% - 5px) no-repeat;
+  /* 左侧只回拉 2px，与末字留 5px 间隙；右缘照常伸出词尾 */
+  margin-left: -2px;
+  margin-right: -7px;
+  vertical-align: bottom;
+}
+
+.core-value.is-played .core-text::before,
+.core-value.is-played .core-text::after {
+  animation: cv-show 0.3s ease 2.95s forwards;
+}
+
+/* 左竖线：滚入视口后先闪烁 2 次（约 1.8s），第 2 次闪完、扫过起跑的
+   瞬间停止并隐藏；未滚到时保持常亮等待 */
+.core-value::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -7px;
+  bottom: -3px;
+  width: 9px;
+  background:
+    radial-gradient(circle 4px at 50% 4px, var(--cv-line, #c9a227) 99%, transparent),
+    linear-gradient(var(--cv-line, #c9a227), var(--cv-line, #c9a227)) center / 2px 100% no-repeat;
+}
+
+.core-value.is-played::before {
+  animation:
+    cv-blink 0.9s steps(1, end) 2,
+    cv-hide 0.05s linear 1.8s forwards;
+}
+
+@keyframes cv-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes cv-hide {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes cv-show {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.core-yellow { --cv-bg: #f6f0cd; --cv-line: #c9a227; }
+.core-pink   { --cv-bg: #f2d7e9; --cv-line: #b3479a; }
+.core-blue   { --cv-bg: #cfe0f2; --cv-line: #4a6fa5; }
+.core-green  { --cv-bg: #d7e8cf; --cv-line: #6a9152; }
+
+@media (prefers-reduced-motion: reduce) {
+  .core-value .core-fill { opacity: 0 !important; animation: none !important; }
+  .core-value .core-text { background-color: var(--cv-bg, #f6f0cd) !important; animation: none !important; }
+  .core-value .core-text::before,
+  .core-value .core-text::after { opacity: 1 !important; animation: none !important; }
+  .core-value::before { animation: none !important; opacity: 0 !important; }
+}
+
+/* 👋 摆动动画：以手腕为轴挥动数次，停顿后循环 */
+.emoji-wave {
+  display: inline-block;
+  transform-origin: 72% 72%;
+  animation: emoji-wave 2.8s ease-in-out 1s infinite;
+}
+
+@keyframes emoji-wave {
+  0%, 50%, 100% { transform: rotate(0deg); }
+  5% { transform: rotate(18deg); }
+  15% { transform: rotate(-10deg); }
+  25% { transform: rotate(16deg); }
+  35% { transform: rotate(-6deg); }
+  45% { transform: rotate(10deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emoji-wave { animation: none !important; }
+}
+
+/* ✨ 封面散落的星星/圆点贴纸：缓慢闪烁 */
+.doodle {
+  animation: doodle-twinkle 3.4s ease-in-out infinite;
+}
+
+@keyframes doodle-twinkle {
+  0%, 100% { transform: rotate(var(--rot, 0deg)) scale(0.86); opacity: 0.7; }
+  50% { transform: rotate(var(--rot, 0deg)) scale(1.06); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .doodle { animation: none !important; }
+}
+
+/* 🏷️ 贴纸交互：拿起 / 粘贴 */
+.sticker-lift {
+  transform: rotate(var(--rot, 0deg));
+  transition: transform 0.18s ease;
+}
+
+.sticker-lift:hover {
+  transform: rotate(var(--rot, 0deg)) scale(1.18);
+}
+
+@keyframes sticker-stamp {
+  0% { transform: rotate(var(--rot, 0deg)) scale(1.45); opacity: 0.5; }
+  60% { transform: rotate(var(--rot, 0deg)) scale(0.92); opacity: 1; }
+  100% { transform: rotate(var(--rot, 0deg)) scale(1); }
+}
+
+.sticker-stamped {
+  animation: sticker-stamp 0.38s ease-out;
+}
+
+/* 拿起贴纸时全页面显示抓取光标 */
+body.sticker-picking,
+body.sticker-picking * {
+  cursor: grabbing !important;
+}
+
+/* 贴纸层随封面照片一同淡入（与 fadeWithFolder 时序一致：0.35s 开始，0.6s 完成） */
+@keyframes sticker-layer-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.sticker-layer-in {
+  animation: sticker-layer-in 0.6s ease-out 0.35s backwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker-layer-in { animation: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker-stamped { animation: none !important; }
+}

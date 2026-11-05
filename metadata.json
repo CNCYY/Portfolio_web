@@ -1,0 +1,6 @@
+{
+  "name": "Aesthete — Tactile & Editorial Portfolio",
+  "description": "An interactive editorial portfolio combining physical folder tab drawers, fluid video-text micro-interactions, and serene magazine typography.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
