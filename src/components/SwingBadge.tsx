@@ -5,8 +5,12 @@ import strapClamp from '../assets/lanyard-clamp.png';
 /** 卡带金属夹（O环+夹子）在绳宽 72px 下的显示高度 */
 const CLAMP_W = 72;
 const CLAMP_H = 82;
-/** 夹子底部与卡套顶部的重叠量，形成"夹住"效果 */
-const CLAMP_OVERLAP = 26;
+/**
+ * 卡片悬挂点距卡带末端的距离：
+ * 卡套顶边锁定在卡带的这个点上（夹嘴对准卡套孔位），摆动时卡片绕孔位转动、
+ * 不沿卡带滑动——相当于挂绳穿孔后卡死在小矩形孔之间
+ */
+const CARD_HANG = 46;
 
 interface SwingBadgeProps {
   /** 支点（顶部）到卡片挂点的静止绳长 */
@@ -59,8 +63,8 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
     const card = cardRef.current!;
 
     const writePose = () => {
-      const dx = s.r * Math.sin(s.theta);
-      const dy = s.r * Math.cos(s.theta) - restLen - CLAMP_OVERLAP;
+      const dx = (s.r - CARD_HANG) * Math.sin(s.theta);
+      const dy = (s.r - CARD_HANG) * Math.cos(s.theta) - restLen;
       card.style.transform = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px) rotate(${s.theta.toFixed(4)}rad)`;
       rope.style.height = `${s.r.toFixed(2)}px`;
       rope.style.transform = `rotate(${s.theta.toFixed(4)}rad)`;
@@ -247,7 +251,7 @@ export function SwingBadge({ ropeLength = 84, className = '', children }: SwingB
   }, [ropeLength]);
 
   return (
-    <div ref={rootRef} className="relative w-fit" style={{ paddingTop: ropeLength - CLAMP_OVERLAP }}>
+    <div ref={rootRef} className="relative w-fit" style={{ paddingTop: ropeLength }}>
       {/* 卡带：顶部织带随弹性伸缩（object-fit fill 拉伸织纹），底部金属夹固定尺寸 */}
       <div
         ref={ropeRef}
