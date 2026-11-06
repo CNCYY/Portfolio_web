@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from 'react';
-import strapRibbon from '../assets/lanyard-ribbon.png';
-import strapClamp from '../assets/lanyard-clamp.png';
+﻿import React, { useEffect, useRef } from 'react';
+import strapRibbon from '../assets/lanyard-ribbon.webp';
+import strapClamp from '../assets/lanyard-clamp.webp';
 
 /** 卡带金属夹（O环+夹子）在绳宽 72px 下的显示高度 */
 const CLAMP_W = 72;

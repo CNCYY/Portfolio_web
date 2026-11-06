@@ -1,4 +1,4 @@
-export type ChapterGroup = 'tools' | 'interaction';
+﻿export type ChapterGroup = 'tools' | 'interaction';
 
 export interface ChapterSection {
   id: string;
@@ -94,8 +94,8 @@ export const CHAPTERS: Chapter[] = [
         title: 'SVGA Key Injector',
         lead: '为缺少适配图层的素材新增图层，使其具备适配用户名或头像的能力',
         projectId: 'svga-automation-tools',
-        beforeImage: '/assets/aistudio/svga_ki_before.png',
-        afterImage: '/assets/aistudio/svga_ki_after.png',
+        beforeImage: '/assets/aistudio/svga_ki_before.webp',
+        afterImage: '/assets/aistudio/svga_ki_after.webp',
         github: 'https://github.com/CNCYY/svga-tool.git',
         points: [
           {
@@ -117,8 +117,8 @@ export const CHAPTERS: Chapter[] = [
         title: 'SVGA Layer Master',
         lead: '对已有物料的图层名称或内容进行调整：重命名、删除、替换。',
         projectId: 'svga-automation-tools',
-        beforeImage: '/assets/aistudio/svga_lm_before.png',
-        afterImage: '/assets/aistudio/svga_lm_after.png',
+        beforeImage: '/assets/aistudio/svga_lm_before.webp',
+        afterImage: '/assets/aistudio/svga_lm_after.webp',
         github: 'https://github.com/CNCYY/svga-layertool.git',
         points: [
           {
@@ -214,7 +214,7 @@ export const CHAPTERS: Chapter[] = [
         lead: '建立礼物上架的业务流程',
         gallery: [
           '/assets/aistudio/gift-gallery/g1.jpg',
-          '/assets/aistudio/gift-gallery/g2.png',
+          '/assets/aistudio/gift-gallery/g2.webp',
           '/assets/aistudio/gift-gallery/g3.jpg',
           '/assets/aistudio/gift-gallery/g4.jpg',
           '/assets/aistudio/gift-gallery/g5.jpg',
@@ -304,12 +304,12 @@ export const CHAPTERS: Chapter[] = [
         video: '/assets/aistudio/tool-collection/02.mp4',
         board: {
           items: [
-            '/assets/aistudio/tool-collection/receipt-1.png',
-            '/assets/aistudio/tool-collection/receipt-2.png',
-            '/assets/aistudio/tool-collection/receipt-3.png',
-            '/assets/aistudio/tool-collection/receipt-4.png',
-            '/assets/aistudio/tool-collection/receipt-5.png',
-            '/assets/aistudio/tool-collection/receipt-6.png',
+            '/assets/aistudio/tool-collection/receipt-1.webp',
+            '/assets/aistudio/tool-collection/receipt-2.webp',
+            '/assets/aistudio/tool-collection/receipt-3.webp',
+            '/assets/aistudio/tool-collection/receipt-4.webp',
+            '/assets/aistudio/tool-collection/receipt-5.webp',
+            '/assets/aistudio/tool-collection/receipt-6.webp',
           ],
         },
       },
@@ -330,7 +330,7 @@ export const CHAPTERS: Chapter[] = [
         images: [
           '/assets/aistudio/tool-collection/heritage-1.jpg',
           '/assets/aistudio/tool-collection/heritage-2.jpg',
-          '/assets/aistudio/tool-collection/heritage-3.jpg',
+          '/assets/aistudio/tool-collection/heritage-3.webp',
           '/assets/aistudio/tool-collection/heritage-4.jpg',
         ],
       },

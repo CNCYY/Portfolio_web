@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+﻿import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ScatteredFolderHero } from './components/ScatteredFolderHero';
 import { ChapterPages } from './components/ChapterPages';
 import { StickyBottomFolderTabs, FolderTab } from './components/StickyBottomFolderTabs';
@@ -8,7 +8,7 @@ import { SwingBadge } from './components/SwingBadge';
 import { Tooltip } from './components/ui/tooltip-card';
 import { PROJECTS } from './data/portfolioData';
 import { CHAPTERS, PROJECT_TO_CHAPTER } from './data/chapters';
-import cardHolder from './assets/card-holder.png';
+import cardHolder from './assets/card-holder.webp';
 
 const CONTACT_EMAIL = '961947088@qq.com';
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, type Transition } from 'motion/react';
 import { DESIGNER_INFO, PROJECTS } from '../data/portfolioData';
 import { X } from 'lucide-react';
@@ -357,7 +357,7 @@ export const ScatteredFolderHero: React.FC<Props> = ({
                 className="absolute right-1 top-[72px] w-64 aspect-[4/5] cursor-pointer group"
               >
                 <img
-                  src="/assets/aistudio/hero_ai_gift_back.png"
+                  src="/assets/aistudio/hero_ai_gift_back.webp"
                   alt="AI 礼物折页卡"
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-contain drop-shadow-[0_13px_26px_rgba(0,0,0,0.16)] transition-transform duration-500 group-hover:scale-[1.03]"

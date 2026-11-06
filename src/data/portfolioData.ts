@@ -1,9 +1,9 @@
-import { Project } from '../types';
+﻿import { Project } from '../types';
 
 export const DESIGNER_INFO = {
   name: '你好我是陈滢影',
   role: "Jelly's Collection of Works",
-  avatar: '/assets/aistudio/avatar_chen.png',
+  avatar: '/assets/aistudio/avatar_chen.webp',
   bioIntro:
     '即使灵感会枯竭也不想一成不变。希望利用技术把繁琐事情简单化，从而能够专注在创造之中。',
   stats: [
@@ -25,8 +25,8 @@ export const PROJECTS: Project[] = [
     category: 'Web Tool & Automation',
     year: '2025',
     mediaType: 'image',
-    mediaUrl: '/assets/aistudio/svga__GitHub______1__2f1be6d0.png',
-    scatteredImage: '/assets/aistudio/hero_svga_tool.png',
+    mediaUrl: '/assets/aistudio/svga__GitHub______1__2f1be6d0.webp',
+    scatteredImage: '/assets/aistudio/hero_svga_tool.webp',
     scatteredTitle: 'SVGA Layer Master',
     rotation: -5,
     zIndex: 16,
@@ -38,8 +38,8 @@ export const PROJECTS: Project[] = [
       { label: 'GitHub: svga-tool', url: 'https://github.com/CNCYY/svga-tool', type: 'github' },
     ],
     galleryImages: [
-      '/assets/aistudio/svga__GitHub______1__2f1be6d0.png',
-      '/assets/aistudio/svga__GitHub______2__622db3f9.png',
+      '/assets/aistudio/svga__GitHub______1__2f1be6d0.webp',
+      '/assets/aistudio/svga__GitHub______2__622db3f9.webp',
     ],
     details: {
       background:
@@ -73,7 +73,7 @@ export const PROJECTS: Project[] = [
       '/assets/aistudio/AI________2__513a0d82.jpg',
       '/assets/aistudio/AI________1__89dd7af6.jpg',
       '/assets/aistudio/AI________3__ebadc34f.jpg',
-      '/assets/aistudio/AI________1__70bd8ff5.png',
+      '/assets/aistudio/AI________1__70bd8ff5.webp',
     ],
     details: {
       background:
@@ -94,7 +94,7 @@ export const PROJECTS: Project[] = [
     category: 'Physical Skeuomorphism',
     year: '2025',
     mediaType: 'video',
-    mediaUrl: '/assets/aistudio/AI________1__70bd8ff5.png',
+    mediaUrl: '/assets/aistudio/AI________1__70bd8ff5.webp',
     previewVideoUrl: '/assets/aistudio/_____________73aa7e27.mp4',
     scatteredImage: '/assets/aistudio/hero_heytea_card.png',
     scatteredTitle: '喜茶折叠小卡',
@@ -155,7 +155,7 @@ export const PROJECTS: Project[] = [
       '/assets/aistudio/___________1__bea08a7a.jpg',
       '/assets/aistudio/___________2__2512c533.jpg',
       '/assets/aistudio/___________4__5337d4e2.jpg',
-      '/assets/aistudio/___________3__5a062a62.jpg',
+      '/assets/aistudio/___________3__5a062a62.webp',
     ],
     details: {
       background:
@@ -175,8 +175,8 @@ export const PROJECTS: Project[] = [
     category: 'Interaction Experiments',
     year: '2026',
     mediaType: 'image',
-    mediaUrl: '/assets/aistudio/___________3__5a062a62.jpg',
-    scatteredImage: '/assets/aistudio/___________3__5a062a62.jpg',
+    mediaUrl: '/assets/aistudio/___________3__5a062a62.webp',
+    scatteredImage: '/assets/aistudio/___________3__5a062a62.webp',
     scatteredTitle: '创意互动实验室',
     rotation: 8,
     zIndex: 11,
