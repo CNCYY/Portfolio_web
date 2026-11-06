@@ -12,9 +12,12 @@ import { motion } from 'motion/react';
  * 部署后也显著降低带宽与内存占用。
  * 切换动画：使用处以 key={src} 触发 remount，新视频淡入；
  * 旧视频立即卸载（无退出动画），任何时刻只有一条流，零额外加载。
+ * 底部细进度条：rAF 循环跟随 currentTime 更新，仅播放时运行。
  */
 export const AutoVideo = ({ src, className }: { src: string; className?: string }) => {
   const ref = useRef<HTMLVideoElement>(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef(0);
   const [active, setActive] = useState(false);
 
   // 观察可见性：可见过半才算激活，减少快速滚动经过时的误激活
@@ -36,14 +39,44 @@ export const AutoVideo = ({ src, className }: { src: string; className?: string 
     else el.pause();
   }, [active]);
 
+  // 进度条：播放中每帧刷新宽度；暂停/无时长时不跑循环
+  useEffect(() => {
+    const el = ref.current;
+    const bar = barRef.current;
+    if (!el || !bar) return;
+    const tick = () => {
+      const { duration, currentTime } = el;
+      if (duration > 0) bar.style.width = `${Math.min(100, (currentTime / duration) * 100)}%`;
+      if (el.paused || el.ended) {
+        rafRef.current = 0;
+        return;
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    const start = () => {
+      if (!rafRef.current) rafRef.current = requestAnimationFrame(tick);
+    };
+    // 覆盖 play 事件（含循环重播）与初始 buffered 元数据就绪
+    el.addEventListener('play', start);
+    if (!el.paused && !el.ended && el.readyState >= 2) start();
+    return () => {
+      el.removeEventListener('play', start);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+    };
+  }, [active, src]);
+
   return (
     <motion.div
-      className="h-full"
+      className="relative h-full overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       <video ref={ref} src={src} muted loop playsInline preload="none" className={className} />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-white/20">
+        <div ref={barRef} className="h-full w-0 bg-white/85" />
+      </div>
     </motion.div>
   );
 };
