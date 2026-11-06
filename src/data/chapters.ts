@@ -213,15 +213,15 @@ export const CHAPTERS: Chapter[] = [
         title: '数据与使用跟踪',
         lead: '建立礼物上架的业务流程',
         gallery: [
-          '/assets/aistudio/gift-gallery/g1.jpg',
+          '/assets/aistudio/gift-gallery/g1.webp',
           '/assets/aistudio/gift-gallery/g2.webp',
-          '/assets/aistudio/gift-gallery/g3.jpg',
-          '/assets/aistudio/gift-gallery/g4.jpg',
-          '/assets/aistudio/gift-gallery/g5.jpg',
-          '/assets/aistudio/gift-gallery/g6.jpg',
-          '/assets/aistudio/gift-gallery/g7.jpg',
-          '/assets/aistudio/gift-gallery/g8.jpg',
-          '/assets/aistudio/gift-gallery/g9.jpg',
+          '/assets/aistudio/gift-gallery/g3.webp',
+          '/assets/aistudio/gift-gallery/g4.webp',
+          '/assets/aistudio/gift-gallery/g5.webp',
+          '/assets/aistudio/gift-gallery/g6.webp',
+          '/assets/aistudio/gift-gallery/g7.webp',
+          '/assets/aistudio/gift-gallery/g8.webp',
+          '/assets/aistudio/gift-gallery/g9.webp',
         ],
         points: [
           {
@@ -328,10 +328,10 @@ export const CHAPTERS: Chapter[] = [
         projectId: 'chinese-heritage-pattern',
         video: '/assets/aistudio/tool-collection/04_x264.mp4',
         images: [
-          '/assets/aistudio/tool-collection/heritage-1.jpg',
-          '/assets/aistudio/tool-collection/heritage-2.jpg',
+          '/assets/aistudio/tool-collection/heritage-1.webp',
+          '/assets/aistudio/tool-collection/heritage-2.webp',
           '/assets/aistudio/tool-collection/heritage-3.webp',
-          '/assets/aistudio/tool-collection/heritage-4.jpg',
+          '/assets/aistudio/tool-collection/heritage-4.webp',
         ],
       },
       {

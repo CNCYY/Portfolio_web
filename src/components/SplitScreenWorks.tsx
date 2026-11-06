@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Project } from '../types';
 import { VideoPlayerPreview } from './VideoPlayerPreview';
@@ -44,7 +44,7 @@ export const SplitScreenWorks: React.FC<Props> = ({
 
   return (
     <div id="works-list" className="w-full">
-      {/* 3-Column Editorial Layout without Bounding Boxes (Unboxed, Pure Whitespace Separation matching image_e99bcf24.png) */}
+      {/* 3-Column Editorial Layout without Bounding Boxes (Unboxed, Pure Whitespace Separation matching image_e99bcf24.webp) */}
       {projects.map((project, idx) => {
         const isHighlighted = activeHighlightedId === project.id;
         const isSaved = bookmarkedIds.has(project.id);

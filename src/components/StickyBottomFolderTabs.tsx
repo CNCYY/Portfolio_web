@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 
 export interface FolderTab {
   id: string;
@@ -52,7 +52,7 @@ export const StickyBottomFolderTabs: React.FC<Props> = ({
                     : 'h-[32px] sm:h-[35px] z-10 hover:h-[37px] sm:hover:h-[40px] hover:z-20'
                 }`}
               >
-                {/* Authentic Die-Cut Folder Tab SVG Silhouette (Exact match to image_78e6d42f.png) */}
+                {/* Authentic Die-Cut Folder Tab SVG Silhouette (Exact match to image_78e6d42f.webp) */}
                 <svg
                   className="absolute inset-0 w-full h-full -z-10 pointer-events-none filter drop-shadow-[0_-2px_6px_rgba(40,30,20,0.04)]"
                   viewBox="0 0 100 36"
