@@ -196,8 +196,8 @@ export const ReceiptBoard = ({ items }: { items: string[] }) => {
 
   return (
     <>
-      {/* 小板 */}
-      <div className="relative aspect-square w-full select-none">
+      {/* 小板：悬停时小票依次"竖起来"（效果在 index.css .receipt-board） */}
+      <div className="receipt-board relative aspect-square w-full select-none">
         {items.map((src, i) => {
           const l = LAYOUT[i % LAYOUT.length];
 
@@ -208,14 +208,14 @@ export const ReceiptBoard = ({ items }: { items: string[] }) => {
               alt=""
               draggable={false}
               onClick={() => setOpen(true)}
-              className="absolute cursor-zoom-in drop-shadow-[0_1px_2px_rgba(28,25,23,0.10)]"
+              className="absolute cursor-zoom-in"
               style={{
                 left: l.left,
                 top: l.top,
                 width: l.w,
                 zIndex: l.z,
-                transform: `rotate(${l.rot}deg)`,
-              }}
+                '--rot': `${l.rot}deg`,
+              } as CSSProperties}
             />
           );
         })}

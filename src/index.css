@@ -291,6 +291,36 @@
   .receipt-float { transform: none !important; }
 }
 
+/* ══ Receipt board hover ═══════════════════════════════════
+   小板小票：鼠标悬浮整块展板时，小票像从桌面"竖起来"——
+   底边为支点 rotateX 后仰立起、微微抬升，投影随之变深，
+   依次错峰 45ms 起立形成波浪感；移出时同时落回原位。 */
+.receipt-board img {
+  transform: rotate(var(--rot, 0deg));
+  transform-origin: 50% 96%;
+  filter: drop-shadow(0 1px 2px rgba(28, 25, 23, 0.1));
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), filter 0.55s ease;
+  will-change: transform;
+}
+
+.receipt-board:hover img {
+  transform: perspective(760px) rotateX(46deg) rotate(calc(var(--rot, 0deg) * 0.35))
+    translateY(-3px) scale(1.03);
+  filter: drop-shadow(0 10px 14px rgba(28, 25, 23, 0.16));
+}
+
+.receipt-board:hover img:nth-child(1) { transition-delay: 0s; }
+.receipt-board:hover img:nth-child(2) { transition-delay: 45ms; }
+.receipt-board:hover img:nth-child(3) { transition-delay: 90ms; }
+.receipt-board:hover img:nth-child(4) { transition-delay: 135ms; }
+.receipt-board:hover img:nth-child(5) { transition-delay: 180ms; }
+.receipt-board:hover img:nth-child(6) { transition-delay: 225ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .receipt-board img { transition: none; }
+  .receipt-board:hover img { transform: rotate(var(--rot, 0deg)); }
+}
+
 /* ══ Core value highlight ═══════════════════════════════════
    核心价值荧光笔高亮段：滚入视口 → 左光标闪 2 次 → 整块高亮从
    左向右扫过 → 扫完整块淡出、切换为逐行贴合文字的荧光条，第一
@@ -506,29 +536,4 @@ body.sticker-picking * {
 
 @media (prefers-reduced-motion: reduce) {
   .sticker-stamped { animation: none !important; }
-}
-
-/* ---- 鼠标点击波纹 ---- */
-@keyframes click-ripple {
-  0% {
-    transform: translate(-50%, -50%) scale(0.25);
-    opacity: 0.9;
-  }
-  70% {
-    opacity: 0.35;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 0;
-  }
-}
-.click-ripple {
-  position: fixed;
-  width: 64px;
-  height: 64px;
-  border-radius: 9999px;
-  border: 1.5px solid rgba(124, 116, 240, 0.55);
-  pointer-events: none;
-  animation: click-ripple 0.33s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
-  will-change: transform, opacity;
 }

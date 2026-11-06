@@ -13,8 +13,17 @@ import { motion } from 'motion/react';
  * 切换动画：使用处以 key={src} 触发 remount，新视频淡入；
  * 旧视频立即卸载（无退出动画），任何时刻只有一条流，零额外加载。
  * 底部细进度条：rAF 循环跟随 currentTime 更新，仅播放时运行。
+ * barColor：进度条填充色，由使用方按页面主题传入（默认白色）。
  */
-export const AutoVideo = ({ src, className }: { src: string; className?: string }) => {
+export const AutoVideo = ({
+  src,
+  className,
+  barColor,
+}: {
+  src: string;
+  className?: string;
+  barColor?: string;
+}) => {
   const ref = useRef<HTMLVideoElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
@@ -75,7 +84,11 @@ export const AutoVideo = ({ src, className }: { src: string; className?: string 
     >
       <video ref={ref} src={src} muted loop playsInline preload="none" className={className} />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-white/20">
-        <div ref={barRef} className="h-full w-0 bg-white/85" />
+        <div
+          ref={barRef}
+          className="h-full w-0 bg-white/85"
+          style={barColor ? { backgroundColor: barColor } : undefined}
+        />
       </div>
     </motion.div>
   );

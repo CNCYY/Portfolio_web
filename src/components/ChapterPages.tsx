@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronDown, Github } from 'lucide-react';
 import { Chapter, ChapterSection } from '../data/chapters';
-import DotWaveBg from './DotWaveBg';
 import { ImageCompare } from './ImageCompare';
 import { Gallery } from './Gallery';
 import { MiniCarousel } from './MiniCarousel';
@@ -16,6 +15,14 @@ const CORE_TONES: Record<string, string> = {
   'ai-gift': 'core-pink',
   'vibe-h5': 'core-blue',
   'creative-collection': 'core-green',
+};
+
+/** 每页视频进度条颜色 = 该页荧光底块色（对应 index.css 中 CORE_TONES 的 --cv-bg） */
+const BAR_COLORS: Record<string, string> = {
+  'svga-tools': '#f6f0cd',
+  'ai-gift': '#f2d7e9',
+  'vibe-h5': '#cfe0f2',
+  'creative-collection': '#d7e8cf',
 };
 
 /**
@@ -423,10 +430,8 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
             <section
               key={ch.id}
               id={`chapter-${ch.id}`}
-              className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32 relative isolate"
+              className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32"
             >
-              {/* 点阵波纹背景：光标划过时点阵泛起波纹（正文页专用浅点色） */}
-              <DotWaveBg dot="#e7e7e6" wave="#ffffff" />
               {/* 下滑滑入视口时内容由小到大缩放显现 */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -502,6 +507,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                         key={videoSrc}
                         src={videoSrc}
                         className="w-full h-full object-cover"
+                        barColor={BAR_COLORS[ch.id]}
                       />
                     </div>
                   )}
@@ -559,10 +565,8 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
           <section
             key={ch.id}
             id={`chapter-${ch.id}`}
-            className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32 relative isolate"
+            className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32"
           >
-            {/* 点阵波纹背景：光标划过时点阵泛起波纹（正文页专用浅点色） */}
-            <DotWaveBg dot="#e7e7e6" wave="#ffffff" />
             {/* 下滑滑入视口时内容由小到大缩放显现 */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -620,6 +624,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                           key={videoSrc}
                           src={videoSrc}
                           className={`w-full h-auto ${activeSection?.videoScale ?? ''}`}
+                          barColor={BAR_COLORS[ch.id]}
                         />
                       </div>
                     ) : (
@@ -634,6 +639,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                               ? 'h-full w-auto'
                               : 'h-full w-full object-cover'
                           } ${activeSection?.videoScale ?? ''}`}
+                          barColor={BAR_COLORS[ch.id]}
                         />
                       </div>
                     )
