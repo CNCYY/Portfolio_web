@@ -524,8 +524,8 @@ body.sticker-picking * {
 }
 .click-ripple {
   position: fixed;
-  width: 88px;
-  height: 88px;
+  width: 64px;
+  height: 64px;
   border-radius: 9999px;
   border: 1.5px solid rgba(124, 116, 240, 0.55);
   pointer-events: none;
