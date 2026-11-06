@@ -2,7 +2,7 @@ import { Project } from '../types';
 
 export const DESIGNER_INFO = {
   name: '你好我是陈滢影',
-  role: 'A 2026 Portfolio by a *Gapper*',
+  role: "Jelly's Collection of Works",
   avatar: '/assets/aistudio/avatar_chen.png',
   bioIntro:
     '即使灵感会枯竭也不想一成不变。希望利用技术把繁琐事情简单化，从而能够专注在创造与美之中。',
