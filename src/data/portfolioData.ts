@@ -5,7 +5,7 @@ export const DESIGNER_INFO = {
   role: 'A 2026 Portfolio by a *Gapper*',
   avatar: '/assets/aistudio/avatar_chen.png',
   bioIntro:
-    '即使灵感会枯竭也不想一成不变。技术的出现应该是把事情简单化，从而让人们能够专注在创造与美之中。',
+    '即使灵感会枯竭也不想一成不变。希望利用技术把繁琐事情简单化，从而能够专注在创造与美之中。',
   stats: [
     { label: 'GitHub @CNCYY', value: '' },
     { label: '线上开源工具', value: '2 款' },
