@@ -29,25 +29,6 @@
   font-family: var(--font-sans);
 }
 
-/* 陀螺仪光标：箭头跟随鼠标并转向移动方向 */
-.gyro-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  will-change: transform;
-  filter: drop-shadow(0 2px 3px rgba(81, 73, 97, 0.25));
-}
-@media (hover: hover) and (pointer: fine) {
-  body,
-  body * {
-    cursor: none !important;
-  }
-}
-
 /* Scroll snap physics & smooth momentum */
 #scroll-snap-viewport {
   scroll-snap-type: y mandatory;
@@ -525,4 +506,29 @@ body.sticker-picking * {
 
 @media (prefers-reduced-motion: reduce) {
   .sticker-stamped { animation: none !important; }
+}
+
+/* ---- 鼠标点击波纹 ---- */
+@keyframes click-ripple {
+  0% {
+    transform: translate(-50%, -50%) scale(0.25);
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+.click-ripple {
+  position: fixed;
+  width: 88px;
+  height: 88px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(124, 116, 240, 0.55);
+  pointer-events: none;
+  animation: click-ripple 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  will-change: transform, opacity;
 }
