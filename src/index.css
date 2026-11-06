@@ -529,6 +529,6 @@ body.sticker-picking * {
   border-radius: 9999px;
   border: 1.5px solid rgba(124, 116, 240, 0.55);
   pointer-events: none;
-  animation: click-ripple 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+  animation: click-ripple 0.33s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   will-change: transform, opacity;
 }
