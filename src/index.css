@@ -29,6 +29,25 @@
   font-family: var(--font-sans);
 }
 
+/* 陀螺仪光标：箭头跟随鼠标并转向移动方向 */
+.gyro-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: transform;
+  filter: drop-shadow(0 2px 3px rgba(81, 73, 97, 0.25));
+}
+@media (hover: hover) and (pointer: fine) {
+  body,
+  body * {
+    cursor: none !important;
+  }
+}
+
 /* Scroll snap physics & smooth momentum */
 #scroll-snap-viewport {
   scroll-snap-type: y mandatory;
@@ -68,15 +87,20 @@
 }
 
 /* ══ Dot grid background ═══════════════════════════════════
-   米色底（点阵由 DotWaveBg canvas 组件绘制，支持光标波纹）。
-   .dot-grid      → 米色底（滚动容器、封面、封底）
-   .dot-grid-soft → 同色底（正文四页专用，覆盖父级背景） */
+   米色底 + 细浅灰点阵（15px 密网格）。
+   与容器背景同层渲染，滚动时固定、内容从上方滑过，无层叠遮挡问题。
+   .dot-grid      → 原始点色（封面、封底）
+   .dot-grid-soft → 更浅点色（正文四页专用，覆盖父级背景） */
 .dot-grid {
   background-color: #fcfbf9;
+  background-image: radial-gradient(circle, #dedede 1px, transparent 1px);
+  background-size: 15px 15px;
 }
 
 .dot-grid-soft {
   background-color: #fcfbf9;
+  background-image: radial-gradient(circle, #e7e7e6 1px, transparent 1px);
+  background-size: 15px 15px;
 }
 
 /* ══ Soft-edged panel ══════════════════════════════════════
