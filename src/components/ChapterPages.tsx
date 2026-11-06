@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronDown, Github } from 'lucide-react';
 import { Chapter, ChapterSection } from '../data/chapters';
+import DotWaveBg from './DotWaveBg';
 import { ImageCompare } from './ImageCompare';
 import { Gallery } from './Gallery';
 import { MiniCarousel } from './MiniCarousel';
@@ -422,8 +423,10 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
             <section
               key={ch.id}
               id={`chapter-${ch.id}`}
-              className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32"
+              className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32 relative isolate"
             >
+              {/* 点阵波纹背景：光标划过时点阵泛起波纹（正文页专用浅点色） */}
+              <DotWaveBg dot="#e7e7e6" wave="#c6c3bc" />
               {/* 下滑滑入视口时内容由小到大缩放显现 */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -556,8 +559,10 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
           <section
             key={ch.id}
             id={`chapter-${ch.id}`}
-            className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32"
+            className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32 relative isolate"
           >
+            {/* 点阵波纹背景：光标划过时点阵泛起波纹（正文页专用浅点色） */}
+            <DotWaveBg dot="#e7e7e6" wave="#c6c3bc" />
             {/* 下滑滑入视口时内容由小到大缩放显现 */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}

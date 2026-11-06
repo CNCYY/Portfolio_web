@@ -5,6 +5,7 @@ import { StickyBottomFolderTabs, FolderTab } from './components/StickyBottomFold
 import { SearchModal } from './components/SearchModal';
 import { StickerBoard } from './components/StickerBoard';
 import { SwingBadge } from './components/SwingBadge';
+import DotWaveBg from './components/DotWaveBg';
 import { Tooltip } from './components/ui/tooltip-card';
 import { PROJECTS } from './data/portfolioData';
 import { CHAPTERS, PROJECT_TO_CHAPTER } from './data/chapters';
@@ -192,8 +193,10 @@ export default function App() {
       {/* 3. Minimalist Colophon Footer (Final Snap Slide) */}
       <footer
         id="section-footer"
-        className="relative overflow-hidden min-h-[50vh] sm:min-h-[60vh] snap-start snap-always flex border-t border-stone-200 pb-16 bg-stone-100/30"
+        className="relative isolate overflow-hidden min-h-[50vh] sm:min-h-[60vh] snap-start snap-always flex border-t border-stone-200 pb-16 bg-stone-100/30"
       >
+        {/* 点阵波纹背景：光标划过时点阵泛起波纹 */}
+        <DotWaveBg dot="#dedede" wave="#bfb8ae" />
         <div className="max-w-7xl mx-auto px-6 w-full flex flex-col sm:flex-row items-start justify-between gap-8">
           {/* 左侧：CONNECT ME 卡套，从 footer 顶边垂下的物理挂牌 */}
           <div className="flex w-full sm:w-auto items-center justify-center sm:justify-start self-start">

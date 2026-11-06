@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, type Transition } from 'motion/react';
 import { DESIGNER_INFO, PROJECTS } from '../data/portfolioData';
 import { X } from 'lucide-react';
+import DotWaveBg from './DotWaveBg';
 
 interface Props {
   activeTab: 'all' | 'tools' | 'interaction';
@@ -149,8 +150,10 @@ export const ScatteredFolderHero: React.FC<Props> = ({
   return (
     <section
       id="hero-folder"
-      className="min-h-screen snap-start snap-always flex flex-col justify-between pt-8 pb-6 border-b border-stone-200 dot-grid overflow-hidden relative"
+      className="min-h-screen snap-start snap-always flex flex-col justify-between pt-8 pb-6 border-b border-stone-200 dot-grid overflow-hidden relative isolate"
     >
+      {/* 点阵波纹背景：光标划过时点阵泛起波纹 */}
+      <DotWaveBg dot="#dedede" wave="#bfb8ae" />
       <div className="max-w-7xl mx-auto px-6 w-full flex-1 flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Clean Minimalist Profile & Category Tabs */}
