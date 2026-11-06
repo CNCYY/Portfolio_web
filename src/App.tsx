@@ -5,7 +5,6 @@ import { StickyBottomFolderTabs, FolderTab } from './components/StickyBottomFold
 import { SearchModal } from './components/SearchModal';
 import { StickerBoard } from './components/StickerBoard';
 import { SwingBadge } from './components/SwingBadge';
-import ClickRipple from './components/ClickRipple';
 import { Tooltip } from './components/ui/tooltip-card';
 import { PROJECTS } from './data/portfolioData';
 import { CHAPTERS, PROJECT_TO_CHAPTER } from './data/chapters';
@@ -167,9 +166,6 @@ export default function App() {
     >
       {/* 可拿起/粘贴的全局装饰贴纸层（星星/圆点/图片/emoji） */}
       <StickerBoard />
-
-      {/* 鼠标点击波纹（全站） */}
-      <ClickRipple />
 
       {/* Sticky Bottom Folder Tabs (Appears on slide 2+ matching user reference image) */}
       <StickyBottomFolderTabs
