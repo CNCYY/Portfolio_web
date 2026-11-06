@@ -83,7 +83,7 @@ export const AutoVideo = ({
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
       <video ref={ref} src={src} muted loop playsInline preload="none" className={className} />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] bg-white/20">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[5px] bg-white/20">
         <div
           ref={barRef}
           className="h-full w-0 bg-white/85"
