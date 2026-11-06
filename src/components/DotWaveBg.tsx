@@ -14,15 +14,9 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
     if (!ctx) return;
 
     const SP = 15; // 网格间距（与 dot-grid 一致）
-    const R = 110; // 波纹影响半径
+    const R = 80; // 波纹影响半径
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // 波纹点颜色拆成 RGB，用于逐帧构建毛玻璃质感的透明度渐变
-    const wr = parseInt(wave.slice(1, 3), 16);
-    const wg = parseInt(wave.slice(3, 5), 16);
-    const wb = parseInt(wave.slice(5, 7), 16);
 
-    let W = 0;
-    let H = 0;
     let dpr = 1;
     let base: HTMLCanvasElement | null = null;
     let cols = 0;
@@ -40,8 +34,6 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
       const rect = canvas.getBoundingClientRect();
       const w = Math.max(1, Math.round(rect.width));
       const h = Math.max(1, Math.round(rect.height));
-      W = w;
-      H = h;
       dpr = Math.min(window.devicePixelRatio || 1, 1.75);
       canvas.width = Math.round(w * dpr);
       canvas.height = Math.round(h * dpr);
@@ -74,8 +66,6 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
     const frame = () => {
       raf = 0;
       const rect = canvas.getBoundingClientRect();
-      // 布局漂移自愈：尺寸变了（图片/视频加载、字体就绪等）立即重建网格
-      if (Math.round(rect.width) !== W || Math.round(rect.height) !== H) rebuild();
       const lx = mx - rect.left;
       const ly = my - rect.top;
       // 光标附近的点朝波峰幅度抬升（光标静止 400ms 后停止激发，让波纹自然平息）
@@ -92,7 +82,7 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
             const p = 1 - Math.sqrt(dx * dx + dy * dy) / R;
             if (p <= 0) continue;
             const i = gy * cols + gx;
-            const target = p * p * 1.6;
+            const target = p * p * 1.3;
             if (target > scale[i]) {
               scale[i] += (target - scale[i]) * 0.35;
               if (active.indexOf(i) < 0) active.push(i);
@@ -105,7 +95,7 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (base) ctx.drawImage(base, 0, 0);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      // 波动点：毛玻璃质感（中心高光 + 半透明玻璃体 + 羽化边缘）
+      ctx.fillStyle = wave;
       for (let k = active.length - 1; k >= 0; k--) {
         const i = active[k];
         scale[i] *= 0.9;
@@ -116,16 +106,8 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
         }
         const gx = i % cols;
         const gy = (i / cols) | 0;
-        const s = Math.min(1.6, scale[i]);
-        const a = Math.min(1, s); // 淡入系数
-        const r = 1 + s * 3.4;
-        const g = ctx.createRadialGradient(gx - r * 0.28, gy - r * 0.32, r * 0.1, gx, gy, r);
-        g.addColorStop(0, `rgba(255,255,255,${(0.85 * a).toFixed(3)})`);
-        g.addColorStop(0.4, `rgba(${wr},${wg},${wb},${(0.6 * a).toFixed(3)})`);
-        g.addColorStop(1, `rgba(${wr},${wg},${wb},0)`);
-        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(gx, gy, r, 0, Math.PI * 2);
+        ctx.arc(gx * SP, gy * SP, 1 + scale[i] * 2.2, 0, Math.PI * 2);
         ctx.fill();
       }
       if (visible && active.length) {
@@ -160,16 +142,14 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
       start();
     });
     io.observe(canvas);
-    // 布局尺寸变化（窗口缩放、图片/视频加载、字体就绪）时重铺点阵
-    const ro = new ResizeObserver(() => rebuild());
-    ro.observe(canvas);
     window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('resize', rebuild);
 
     return () => {
       if (raf) cancelAnimationFrame(raf);
       io.disconnect();
-      ro.disconnect();
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('resize', rebuild);
     };
   }, [dot, wave]);
 

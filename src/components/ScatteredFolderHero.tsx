@@ -153,7 +153,7 @@ export const ScatteredFolderHero: React.FC<Props> = ({
       className="min-h-screen snap-start snap-always flex flex-col justify-between pt-8 pb-6 border-b border-stone-200 dot-grid overflow-hidden relative isolate"
     >
       {/* 点阵波纹背景：光标划过时点阵泛起波纹 */}
-      <DotWaveBg dot="#dedede" wave="#bfb8ae" />
+      <DotWaveBg dot="#dedede" wave="#ffffff" />
       <div className="max-w-7xl mx-auto px-6 w-full flex-1 flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
           {/* Left Column: Clean Minimalist Profile & Category Tabs */}
