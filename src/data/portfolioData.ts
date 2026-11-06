@@ -5,7 +5,7 @@ export const DESIGNER_INFO = {
   role: "Jelly's Collection of Works",
   avatar: '/assets/aistudio/avatar_chen.png',
   bioIntro:
-    '即使灵感会枯竭也不想一成不变。希望利用技术把繁琐事情简单化，从而能够专注在创造与美之中。',
+    '即使灵感会枯竭也不想一成不变。希望利用技术把繁琐事情简单化，从而能够专注在创造之中。',
   stats: [
     { label: 'GitHub @CNCYY', value: '' },
     { label: '线上开源工具', value: '2 款' },
