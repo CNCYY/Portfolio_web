@@ -16,6 +16,10 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
     const SP = 15; // 网格间距（与 dot-grid 一致）
     const R = 110; // 波纹影响半径
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // 波纹点颜色拆成 RGB，用于逐帧构建毛玻璃质感的透明度渐变
+    const wr = parseInt(wave.slice(1, 3), 16);
+    const wg = parseInt(wave.slice(3, 5), 16);
+    const wb = parseInt(wave.slice(5, 7), 16);
 
     let dpr = 1;
     let base: HTMLCanvasElement | null = null;
@@ -95,7 +99,7 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (base) ctx.drawImage(base, 0, 0);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.fillStyle = wave;
+      // 波动点：毛玻璃质感（中心高光 + 半透明玻璃体 + 羽化边缘）
       for (let k = active.length - 1; k >= 0; k--) {
         const i = active[k];
         scale[i] *= 0.9;
@@ -106,8 +110,16 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
         }
         const gx = i % cols;
         const gy = (i / cols) | 0;
+        const s = Math.min(1.6, scale[i]);
+        const a = Math.min(1, s); // 淡入系数
+        const r = 1 + s * 3.4;
+        const g = ctx.createRadialGradient(gx - r * 0.28, gy - r * 0.32, r * 0.1, gx, gy, r);
+        g.addColorStop(0, `rgba(255,255,255,${(0.85 * a).toFixed(3)})`);
+        g.addColorStop(0.4, `rgba(${wr},${wg},${wb},${(0.6 * a).toFixed(3)})`);
+        g.addColorStop(1, `rgba(${wr},${wg},${wb},0)`);
+        ctx.fillStyle = g;
         ctx.beginPath();
-        ctx.arc(gx * SP, gy * SP, 1 + scale[i] * 2.6, 0, Math.PI * 2);
+        ctx.arc(gx, gy, r, 0, Math.PI * 2);
         ctx.fill();
       }
       if (visible && active.length) {
