@@ -304,7 +304,7 @@
 }
 
 .receipt-board:hover img {
-  transform: perspective(760px) rotateX(46deg) rotate(calc(var(--rot, 0deg) * 0.35))
+  transform: perspective(760px) rotateX(-46deg) rotate(calc(var(--rot, 0deg) * 0.35))
     translateY(-3px) scale(1.03);
   filter: drop-shadow(0 10px 14px rgba(28, 25, 23, 0.16));
 }
