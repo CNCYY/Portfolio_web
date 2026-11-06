@@ -153,5 +153,5 @@ export default function DotWaveBg({ dot, wave }: { dot: string; wave: string }) 
     };
   }, [dot, wave]);
 
-  return <canvas ref={ref} aria-hidden className="pointer-events-none absolute inset-0 -z-10" />;
+  return <canvas ref={ref} aria-hidden className="pointer-events-none absolute inset-0 -z-10 h-full w-full" />;
 }
