@@ -6,6 +6,7 @@ import { SearchModal } from './components/SearchModal';
 import { StickerBoard } from './components/StickerBoard';
 import { SwingBadge } from './components/SwingBadge';
 import { LoadingScreen } from './components/LoadingScreen';
+import { ClickDoodles } from './components/ClickDoodles';
 import { Tooltip } from './components/ui/tooltip-card';
 import { PROJECTS } from './data/portfolioData';
 import { CHAPTERS, PROJECT_TO_CHAPTER } from './data/chapters';
@@ -180,6 +181,8 @@ export default function App() {
     <>
       {/* 首屏 Loading 遮罩：涂鸦女孩翻找文件夹，关键资源就绪后淡出 */}
       <LoadingScreen />
+      {/* 点击涂鸦：空白处点击原地画个小手绘，画在哪一屏就留在哪一屏 */}
+      <ClickDoodles pageKey={activeSectionId} />
       <div
         ref={containerRef}
         id="scroll-snap-viewport"
