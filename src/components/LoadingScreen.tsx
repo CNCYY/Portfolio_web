@@ -66,9 +66,6 @@ export function LoadingScreen() {
         draggable={false}
         className="w-[300px] sm:w-[340px] h-auto"
       />
-      <div className="text-[13px] tracking-[0.35em] text-stone-500 font-sans">
-        加载中...
-      </div>
     </div>
   );
 }
