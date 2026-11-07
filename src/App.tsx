@@ -39,6 +39,23 @@ export default function App() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // 图片加载占位：img.img-loading 完成加载（或失败）后打上 .img-loaded，
+  // 移除背景占位动画（透明背景图不能靠内容盖住背景）
+  useEffect(() => {
+    const mark = (e: Event) => {
+      if (e.target instanceof HTMLImageElement) e.target.classList.add('img-loaded');
+    };
+    document.querySelectorAll<HTMLImageElement>('img.img-loading').forEach((i) => {
+      if (i.complete) i.classList.add('img-loaded');
+    });
+    document.addEventListener('load', mark, true);
+    document.addEventListener('error', mark, true);
+    return () => {
+      document.removeEventListener('load', mark, true);
+      document.removeEventListener('error', mark, true);
+    };
+  }, []);
+
   // Filter chapters based on the sub-tab (All / AI 与提效工具 / 拟物与微交互)
   const filteredChapters = useMemo(() => {
     if (activeTab === 'all') return CHAPTERS;

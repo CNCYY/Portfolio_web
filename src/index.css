@@ -537,8 +537,9 @@ body.sticker-picking * {
 }
 
 /* 资源加载占位：图片未完成加载时，img 盒子背景显示翻找动画；
-   加载完成后被不透明内容盖住（仅用于确定不透明的内容图） */
-.img-loading {
+   加载完成（或失败）后由 App 的全局监听打上 .img-loaded 移除占位——
+   不能只靠背景被内容盖住，因为站内大量内容图是透明背景 */
+.img-loading:not(.img-loaded) {
   background-color: #f7f2e7;
   background-image: url('./assets/loading-rummage.webp');
   background-repeat: no-repeat;
