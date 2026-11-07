@@ -33,6 +33,8 @@ export interface ChapterSection {
   videoScale?: string;
   /** 图片廊（横向滚动），配置后该子项右侧展示 Gallery */
   gallery?: string[];
+  /** gallery 渲染为真机竖向手风琴（GiftAccordion，含氛围光效） */
+  deviceGallery?: boolean;
   /** showcase 布局：选中该子项时左下角展示的图片轮播素材 */
   images?: string[];
   /** showcase 布局：选中该子项时左下角展示的错落小票 */
@@ -223,6 +225,7 @@ export const CHAPTERS: Chapter[] = [
           '/assets/aistudio/gift-gallery/g8.webp',
           '/assets/aistudio/gift-gallery/g9.webp',
         ],
+        deviceGallery: true,
         points: [
           {
             label: '结果与沉淀',

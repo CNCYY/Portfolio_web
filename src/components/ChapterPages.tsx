@@ -4,6 +4,7 @@ import { ChevronDown, Github } from 'lucide-react';
 import { Chapter, ChapterSection } from '../data/chapters';
 import { ImageCompare } from './ImageCompare';
 import { Gallery } from './Gallery';
+import { GiftAccordion } from './GiftAccordion';
 import { MiniCarousel } from './MiniCarousel';
 import { ReceiptBoard } from './ReceiptBoard';
 import { AutoVideo } from './AutoVideo';
@@ -644,8 +645,12 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                       </div>
                     )
                   ) : activeSection?.gallery?.length ? (
-                    /* 无视频时展示图片廊（横向滚动） */
-                    <Gallery images={activeSection.gallery} />
+                    /* 无视频时：真机竖向手风琴（含氛围光效）或横向图片廊 */
+                    activeSection.deviceGallery ? (
+                      <GiftAccordion images={activeSection.gallery} />
+                    ) : (
+                      <Gallery images={activeSection.gallery} />
+                    )
                   ) : null}
                 </div>
               ) : (
