@@ -208,7 +208,7 @@ export const ReceiptBoard = ({ items }: { items: string[] }) => {
               alt=""
               draggable={false}
               onClick={() => setOpen(true)}
-              className="absolute cursor-zoom-in"
+              className="absolute cursor-zoom-in img-loading"
               style={{
                 left: l.left,
                 top: l.top,
@@ -280,7 +280,7 @@ export const ReceiptBoard = ({ items }: { items: string[] }) => {
                           src={src}
                           alt=""
                           draggable={false}
-                          className="receipt-pin-img block max-h-[54vh] max-w-[24vw] object-contain drop-shadow-[0_10px_26px_rgba(28,25,23,0.16)]"
+                          className="receipt-pin-img img-loading block max-h-[54vh] max-w-[24vw] object-contain drop-shadow-[0_10px_26px_rgba(28,25,23,0.16)]"
                         />
                       </div>
                     </div>

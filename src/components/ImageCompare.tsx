@@ -150,10 +150,10 @@ export function ImageCompare({
       }}
     >
       {/* the edit underneath, drifting a little with the line */}
-      <img className="cmp-img cmp-after" src={after} alt="" draggable={false} />
+      <img className="cmp-img cmp-after img-loading" src={after} alt="" draggable={false} />
       {/* the raw shot on top, cut off at the line */}
       <div className="cmp-before" style={{ clipPath: cut }}>
-        <img className="cmp-img" src={before} alt="" draggable={false} />
+        <img className="cmp-img img-loading" src={before} alt="" draggable={false} />
       </div>
       {labels && (
         <>

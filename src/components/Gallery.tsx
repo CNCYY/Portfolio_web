@@ -22,7 +22,7 @@ export function Gallery({ images }: { images: string[] }) {
               alt=""
               draggable={false}
               loading={i < images.length ? 'eager' : 'lazy'}
-              className="gal-img"
+              className="gal-img img-loading"
             />
           </div>
         ))}

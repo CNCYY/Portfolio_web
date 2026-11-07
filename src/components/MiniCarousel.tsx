@@ -59,7 +59,7 @@ export const MiniCarousel = ({ images }: { images: string[] }) => {
               alt=""
               draggable={false}
               onClick={() => setOpen(true)}
-              className="absolute left-1/2 top-1/2 h-[176px] w-[132px] cursor-zoom-in rounded-xl object-cover transition-all duration-700 ease-out"
+              className="absolute left-1/2 top-1/2 h-[176px] w-[132px] cursor-zoom-in rounded-xl object-cover transition-all duration-700 ease-out img-loading"
               style={{
                 transform: `translate(-50%, -50%) translateX(${d * 92}px) rotateY(${d * -38}deg) scale(${1 - abs * 0.13})`,
                 zIndex: 10 - abs,
@@ -114,7 +114,7 @@ export const MiniCarousel = ({ images }: { images: string[] }) => {
                     alt=""
                     draggable={false}
                     onClick={() => setCenter(i)}
-                    className={`absolute left-1/2 top-1/2 h-[58vh] w-[43vh] rounded-2xl object-cover transition-all duration-500 ease-out ${
+                    className={`absolute left-1/2 top-1/2 h-[58vh] w-[43vh] rounded-2xl object-cover transition-all duration-500 ease-out img-loading ${
                       d === 0 ? 'cursor-default' : 'cursor-pointer'
                     }`}
                     style={{

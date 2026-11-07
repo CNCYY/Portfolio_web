@@ -535,3 +535,13 @@ body.sticker-picking * {
 @media (prefers-reduced-motion: reduce) {
   .sticker-stamped { animation: none !important; }
 }
+
+/* 资源加载占位：图片未完成加载时，img 盒子背景显示翻找动画；
+   加载完成后被不透明内容盖住（仅用于确定不透明的内容图） */
+.img-loading {
+  background-color: #f7f2e7;
+  background-image: url('./assets/loading-rummage.webp');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: min(88px, 55%);
+}

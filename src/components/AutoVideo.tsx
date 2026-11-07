@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
+import loadingArt from '../assets/loading-rummage.webp';
 
 /**
  * 视口感知的自动播放视频：
@@ -28,6 +29,14 @@ export const AutoVideo = ({
   const barRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef(0);
   const [active, setActive] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  // 切换视频时重置就绪状态；已缓存的视频立即视为就绪
+  useEffect(() => {
+    setReady(false);
+    const el = ref.current;
+    if (el && el.readyState >= 3) setReady(true);
+  }, [src]);
 
   // 观察可见性：可见过半才算激活，减少快速滚动经过时的误激活
   useEffect(() => {
@@ -82,7 +91,25 @@ export const AutoVideo = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3, ease: 'easeOut' }}
     >
-      <video ref={ref} src={src} muted loop playsInline preload="none" className={className} />
+      <video
+        ref={ref}
+        src={src}
+        muted
+        loop
+        playsInline
+        preload="none"
+        onCanPlay={() => setReady(true)}
+        className={className}
+      />
+      {/* 加载占位：涂鸦女孩翻找动画，canplay 后淡出（transform/opacity 合成器动画） */}
+      <div
+        className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-300 ${
+          ready ? 'opacity-0' : 'opacity-100'
+        }`}
+        style={{ backgroundColor: '#f7f2e7' }}
+      >
+        <img src={loadingArt} alt="" draggable={false} className="w-[120px] sm:w-[140px] h-auto" />
+      </div>
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[5px] bg-white/20">
         <div
           ref={barRef}
