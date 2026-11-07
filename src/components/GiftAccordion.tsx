@@ -41,7 +41,7 @@ export function GiftAccordion({ images }: { images: string[] }) {
               onMouseEnter={() => setActive(i)}
               onClick={() => setActive(i)}
               className={`relative h-full cursor-pointer overflow-hidden rounded-[30px] bg-gradient-to-b from-[#f1efe9] to-[#d9d6cf] p-[6px] shadow-[0_18px_40px_-12px_rgba(0,0,0,0.55)] transition-all duration-700 ease-out ${
-                open ? 'w-[224px]' : 'w-[14px]'
+                open ? 'w-[224px]' : 'w-[28px]'
               }`}
             >
               <div className="relative h-full w-full overflow-hidden rounded-[24px] bg-[#0b0812]">
