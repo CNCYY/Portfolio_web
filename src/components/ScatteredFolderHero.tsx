@@ -1,7 +1,8 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence, type Transition } from 'motion/react';
 import { DESIGNER_INFO, PROJECTS } from '../data/portfolioData';
 import { X } from 'lucide-react';
+import avatarSticker from '../assets/stickers/avatar.png';
 
 interface Props {
   activeTab: 'all' | 'tools' | 'interaction';
@@ -185,9 +186,9 @@ export const ScatteredFolderHero: React.FC<Props> = ({
                 }}
               >
                 <img
-                  src={DESIGNER_INFO.avatar}
+                  src={avatarSticker}
                   alt={DESIGNER_INFO.name}
-                  className="h-[134px] w-auto object-contain"
+                  className="h-[134px] w-auto object-contain rounded-full"
                 />
               </motion.div>
             </motion.div>
@@ -205,11 +206,15 @@ export const ScatteredFolderHero: React.FC<Props> = ({
               </div>
             </BlurFadeIn>
 
-            {/* Concise Editorial Copy */}
+            {/* Concise Editorial Copy：两段自我介绍，段间留一行呼吸感 */}
             <BlurFadeIn delay={0.36}>
-              <p className="text-stone-700 text-sm md:text-[15px] leading-relaxed font-sans max-w-lg">
-                {DESIGNER_INFO.bioIntro}
-              </p>
+              <div className="space-y-3 max-w-lg">
+                {DESIGNER_INFO.bioIntro.map((para, i) => (
+                  <p key={i} className="text-stone-700 text-sm md:text-[15px] leading-relaxed font-sans">
+                    {para}
+                  </p>
+                ))}
+              </div>
             </BlurFadeIn>
 
             {/* Unboxed Metadata Stats */}
@@ -405,10 +410,10 @@ export const ScatteredFolderHero: React.FC<Props> = ({
                 {/* Physical Open Pocket Lip Accent with stitch line */}
                 <div className="absolute inset-x-6 top-0 h-1 bg-gradient-to-r from-transparent via-[#D6D3D1] to-transparent opacity-60" />
 
-                {/* Left Die-Cut Tab: FOLDER 01 (Exact match to reference photo!) */}
+                {/* Left Die-Cut Tab: 2026 portfolio（左侧模切标签） */}
                 <div className="absolute -left-[30px] top-12 w-7.5 h-36 bg-white/80 backdrop-blur-md border-l border-y border-[#E7E5E4] rounded-l-2xl flex items-center justify-center shadow-md">
                   <span className="[writing-mode:vertical-rl] transform rotate-180 text-[11px] font-sans tracking-widest text-stone-700 font-bold select-none">
-                    FOLDER 01
+                    2026 portfolio
                   </span>
                 </div>
 

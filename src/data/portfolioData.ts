@@ -4,8 +4,11 @@ export const DESIGNER_INFO = {
   name: '你好我是陈滢影',
   role: "Jelly's Collection of Works",
   avatar: '/assets/aistudio/avatar_chen.webp',
-  bioIntro:
-    '即使灵感会枯竭也不想一成不变。希望利用技术把繁琐事情简单化，从而能够专注在创造之中。',
+  /* 自我介绍：两段（经历方法 / 态度愿景） */
+  bioIntro: [
+    '三年H5活动运营经验，擅长根据主题构思活动内容、活动形式和页面设计风格。习惯从实际目的出发，寻找更简单高效的解决方式。举一反三，理解不同领域的功能逻辑，并灵活运用到实际业务中。',
+    '宁愿灵感枯竭也不想一成不变，希望利用技术把繁琐事情简单化，从而能够专注在创造之中。',
+  ],
   stats: [
     { label: 'GitHub @CNCYY', value: '' },
     { label: '线上开源工具', value: '2 款' },

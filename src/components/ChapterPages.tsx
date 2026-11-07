@@ -443,7 +443,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
               >
                 {/* ---------- 左列：介绍 + 左下图片轮播 + 进度指示 ---------- */}
                 <div className="lg:col-span-4 flex flex-col space-y-6">
-                  <h3 className="text-[34px] sm:text-[40px] font-bold text-stone-900 leading-tight">
+                  <h3 className="text-[34px] sm:text-[40px] font-bold text-[#514961] leading-tight">
                     {ch.title}
                   </h3>
 
@@ -579,7 +579,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
               {/* ---------- 左列：大页介绍；配置 demoVideo 时子项列表置于左下 ---------- */}
               <div className="lg:col-span-5 space-y-6">
                 <div className="flex flex-wrap items-end gap-x-4 gap-y-1">
-                <h3 className="text-[40px] sm:text-[48px] font-bold text-stone-900 leading-tight">
+                <h3 className="text-[40px] sm:text-[48px] font-bold text-[#514961] leading-tight">
                   {ch.title}
                 </h3>
                 {ch.titleNote && (

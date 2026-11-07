@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import avatarSticker from '../assets/stickers/avatar.png';
 import ropeSticker from '../assets/stickers/rope.png';
 
 type StickerKind = 'star' | 'dot' | 'heart' | 'img' | 'emoji';
@@ -54,8 +53,7 @@ const STICKER_SPECS: StickerSpec[] = [
   // 锚定静态的 660px 文件夹板（#hero-folder-board），用右/下边缘像素偏移定位
   // （口袋本身有入场动画不能直接锚定；口袋终位在板内右缘+21px、下缘+46px，480x390）
   { id: 'sticker-sheep', kind: 'emoji', anchor: 'hero-folder-board', edge: { right: 123, bottom: 296 }, emoji: '🐏', size: 26, rot: 8 },
-  // 口袋下方：头像徽章 + 一颗 SVG 紫色爱心点缀
-  { id: 'sticker-avatar', kind: 'img', anchor: 'hero-folder-board', edge: { right: 260, bottom: 60 }, src: avatarSticker, size: 84, rot: 4, round: true },
+  // 口袋下方：一颗 SVG 紫色爱心点缀
   { id: 'sticker-heart', kind: 'heart', anchor: 'hero-folder-board', edge: { right: 195, bottom: 148 }, color: '#C4B5FD', size: 26, rot: -10 },
   // 横跨口袋的绳子：宽度与口袋一致（480px），随口袋倾斜 1.5°（素材竖向 → rot 91.5° 转水平）
   // 定位在口袋中心：口袋中心 = 板右缘-215 / 板下缘-149（right-0 bottom-1 + x25 y50 + 480x390）
@@ -202,6 +200,7 @@ export const StickerBoard: React.FC = () => {
         return (
           <span
             key={s.id}
+            data-doodle-skip
             className={`absolute block touch-none select-none ${
               s.immovable
                 ? 'pointer-events-none'

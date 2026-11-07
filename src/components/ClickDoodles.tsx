@@ -1,16 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import type { PointerEvent as ReactPointerEvent } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 
 /**
  * 点击涂鸦：在页面任意空白处点击，原地画一个小小的手绘 SVG 图案。
- * 图案会一直留在页面上，刷新页面后清空——像在稿纸边缘随手比划的铅笔痕。
+ * 约 1.7 秒后自动缩小淡出——像在稿纸边缘随手比划、又擦掉的铅笔痕。
  *
  * - 命中任何可交互控件（按钮、链接、表单、下拉等）不画，交互不受干扰；
  * - 每次随机挑一个图案，带随机大小 / ±20° 随机倾斜 / 随机颜色，避免重复感；
  * - 图案按笔顺画出（pathLength 0 → 1），prefers-reduced-motion 时直接显现；
- * - 第一次画完涂鸦后，一块橡皮从页面上方掉落停到右下角；
- *   长按橡皮把它拿起，拖到哪里就擦掉半径内的涂鸦，松手放回原位。
  * - 涂鸦层 pointer-events-none + aria-hidden，纯装饰。
  */
 
@@ -147,50 +144,10 @@ type Doodle = {
   color: string;
 };
 
-/* 手绘橡皮擦：双色橡皮块，微微歪着，带两道擦痕碎屑 */
-function EraserGlyph() {
-  return (
-    <svg viewBox="0 0 48 48" fill="none" className="h-full w-full">
-      {/* 橡皮主体（粉色） */}
-      <path
-        d="M 10 27 C 10 24, 12 22, 15 22 L 33 22 C 36 22, 38 24, 38 27 L 38 36 C 38 39, 36 41, 33 41 L 15 41 C 12 41, 10 39, 10 36 Z"
-        fill="#f2a7bb"
-        stroke="#8a5b68"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      {/* 纸套（米白，略歪） */}
-      <path
-        d="M 12 22 L 14.5 11 C 15 8.5, 16.5 7.5, 19 7.5 L 29 7.5 C 31.5 7.5, 33 8.5, 33.5 11 L 36 22"
-        fill="#f7f1e6"
-        stroke="#8a7f6e"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      {/* 纸套上的两道字痕 */}
-      <path d="M 19 14.5 L 29 14.5 M 20 19 L 28 19" stroke="#8a7f6e" strokeWidth="1.6" strokeLinecap="round" />
-      {/* 橡皮碎屑 */}
-      <path d="M 8 44.5 L 9.5 44 M 12 45.5 L 13 44.8 M 40 44.5 L 38.6 44" stroke="#b7ada0" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-/** 橡皮长按拿起时长（ms）：按住不放才算"拿起"，单击无效果 */
-const HOLD_MS = 280;
-/** 橡皮擦除半径（px），加上涂鸦自身一半尺寸做命中判定 */
-const ERASE_R = 30;
-/** 橡皮停留位置：右下角 */
-const ERASER_REST = { right: 24, bottom: 24 } as const;
-
 export function ClickDoodles({ pageKey }: { pageKey: string }) {
   const [pages, setPages] = useState<Record<string, Doodle[]>>({}); // 按页分组的涂鸦
-  const [eraserShown, setEraserShown] = useState(false); // 第一次画涂鸦后掉落
-  const [grabbed, setGrabbed] = useState(false); // 长按拿起橡皮
-  const [pos, setPos] = useState({ x: 0, y: 0 }); // 拿起时橡皮跟随指针
   const idRef = useRef(0);
   const reducedRef = useRef(false);
-  const holdTimer = useRef<number | null>(null);
-  const eraseGuard = useRef(false); // 按住橡皮期间不画新涂鸦
   const pageRef = useRef(pageKey); // 事件回调里读最新页 key
   pageRef.current = pageKey;
 
@@ -200,8 +157,7 @@ export function ClickDoodles({ pageKey }: { pageKey: string }) {
     const onClick = (e: MouseEvent) => {
       const t = e.target as HTMLElement | null;
       if (!t) return;
-      /* 拿橡皮擦的手不画；可交互控件本身及其内部不画 */
-      if (eraseGuard.current) return;
+      /* 可交互控件本身及其内部不画 */
       if (t.closest(INTERACTIVE)) return;
 
       const id = ++idRef.current;
@@ -215,72 +171,17 @@ export function ClickDoodles({ pageKey }: { pageKey: string }) {
         size: 26 + Math.random() * 22,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
       };
-      /* 图案画在当前页名下：常驻、翻走再翻回来还在，刷新页面后清空 */
+      /* 图案画在当前页名下：同屏最多 5 个，约 1.7 秒后自动消失（缩小淡出） */
       const pk = pageRef.current;
-      setPages((s) => ({ ...s, [pk]: [...(s[pk] || []), item] }));
-      setEraserShown(true);
+      setPages((s) => ({ ...s, [pk]: [...(s[pk] || []).slice(-4), item] }));
+      window.setTimeout(() => {
+        setPages((s) => ({ ...s, [pk]: (s[pk] || []).filter((d) => d.id !== id) }));
+      }, 1700);
     };
 
     document.addEventListener('click', onClick);
     return () => document.removeEventListener('click', onClick);
   }, []);
-
-  /* 松手后延迟清掉 guard，让紧随的 click 事件仍被拦住 */
-  const releaseGuard = () => {
-    window.setTimeout(() => {
-      eraseGuard.current = false;
-    }, 80);
-  };
-
-  /* 拿起橡皮后：跟随指针 + 擦掉半径内的涂鸦，松手放回右下角 */
-  useEffect(() => {
-    if (!grabbed) return;
-    const onMove = (e: PointerEvent) => {
-      setPos({ x: e.clientX, y: e.clientY });
-      /* 只擦当前页名下的涂鸦 */
-      const pk = pageRef.current;
-      setPages((s) => {
-        const list = s[pk];
-        if (!list) return s;
-        return {
-          ...s,
-          [pk]: list.filter(
-            (d) => Math.hypot(d.x - e.clientX, d.y - e.clientY) > ERASE_R + d.size / 2,
-          ),
-        };
-      });
-    };
-    const onUp = () => {
-      setGrabbed(false);
-      releaseGuard();
-    };
-    window.addEventListener('pointermove', onMove);
-    window.addEventListener('pointerup', onUp);
-    window.addEventListener('pointercancel', onUp);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-      window.removeEventListener('pointerup', onUp);
-      window.removeEventListener('pointercancel', onUp);
-    };
-  }, [grabbed]);
-
-  /* 长按橡皮 HOLD_MS 后"拿起"；期间拖出橡皮也算取消 */
-  const startHold = (e: ReactPointerEvent) => {
-    e.preventDefault();
-    eraseGuard.current = true;
-    holdTimer.current = window.setTimeout(() => {
-      holdTimer.current = null;
-      setPos({ x: e.clientX, y: e.clientY });
-      setGrabbed(true);
-    }, HOLD_MS);
-  };
-  const cancelHold = () => {
-    if (holdTimer.current) {
-      window.clearTimeout(holdTimer.current);
-      holdTimer.current = null;
-      releaseGuard();
-    }
-  };
 
   return (
     <>
@@ -351,55 +252,7 @@ export function ClickDoodles({ pageKey }: { pageKey: string }) {
             );
           })}
         </AnimatePresence>
-        {/* 拿起橡皮时跟着指针的虚线擦除圈 */}
-        {grabbed && (
-          <motion.div
-            className="absolute rounded-full border border-dashed border-stone-400/70"
-            style={{
-              left: pos.x,
-              top: pos.y,
-              width: ERASE_R * 2,
-              height: ERASE_R * 2,
-              translateX: '-50%',
-              translateY: '-50%',
-            }}
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.15 }}
-          />
-        )}
       </div>
-
-      {/* 橡皮擦：第一次涂鸦后从页面上方掉落，停到右下角；长按拿起可擦除 */}
-      {eraserShown && (
-        <motion.div
-          data-doodle-skip
-          aria-hidden
-          className="pointer-events-auto fixed z-[10000] select-none"
-          style={
-            grabbed
-              ? { left: pos.x, top: pos.y, translateX: '-50%', translateY: '-50%' }
-              : ERASER_REST
-          }
-          initial={{ y: -900, rotate: -24 }}
-          animate={grabbed ? { y: 0, rotate: -10, scale: 1.18 } : { y: 0, rotate: 4, scale: 1 }}
-          transition={
-            grabbed
-              ? { duration: 0.12 }
-              : { type: 'spring', stiffness: 150, damping: 11 }
-          }
-          onPointerDown={startHold}
-          onPointerUp={cancelHold}
-          onPointerLeave={cancelHold}
-        >
-          <div
-            className="h-[54px] w-[54px] touch-none"
-            style={{ cursor: grabbed ? 'grabbing' : 'grab' }}
-          >
-            <EraserGlyph />
-          </div>
-        </motion.div>
-      )}
     </>
   );
 }
