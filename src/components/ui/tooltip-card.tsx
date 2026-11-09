@@ -99,7 +99,7 @@ export const Tooltip = ({
                 align === 'right' ? 'right-7' : 'left-7'
               )}
             />
-            <span className="relative block text-center text-[13px] font-medium leading-relaxed tracking-wide text-stone-900">
+            <span className="relative block text-left text-[13px] font-medium leading-relaxed tracking-wide text-stone-900">
               {content}
             </span>
           </motion.span>
