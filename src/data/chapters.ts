@@ -6,8 +6,8 @@ export interface ChapterSection {
   title: string;
   /** 一句话概括，按钮行右侧小字 */
   lead?: string;
-  /** 核心功能 / 底层逻辑 / 操作流程 等分点 */
-  points?: { label: string; text: string }[];
+  /** 核心功能 / 底层逻辑 / 操作流程 等分点；label 缺省时只渲染正文 */
+  points?: { label?: string; text: string }[];
   /** 小标签，解释设计意图 */
   notes?: string[];
   /** 配图，缺省则渲染占位卡 */
@@ -229,7 +229,7 @@ export const CHAPTERS: Chapter[] = [
         points: [
           {
             label: '结果与沉淀',
-            text: '虽然业务数据未能证明该玩法取得显著增长效果，但实现了 AI 图像生成在语音社交产品中的实际应用，建立礼物上架的业务流程，为后续定制礼物自动化流程提供实践基础。',
+            text: '实现了 AI 图像生成在语音社交产品中的实际应用，建立礼物上架的业务流程，为后续定制礼物自动化流程提供实践基础。',
           },
         ],
       },
@@ -271,6 +271,16 @@ export const CHAPTERS: Chapter[] = [
         // 视频高约 470px（原始尺寸面板），放大 4.5% ≈ 上下各裁掉 10px
         videoScale: 'scale-[1.045]',
       },
+      {
+        id: 'h5-metrics',
+        index: '02',
+        title: '数据与使用跟踪',
+        points: [
+          {
+            text: '成功实现运营自主生成简单可交互H5活动页并成功落地，为部门协作提供新思路。',
+          },
+        ],
+      },
     ],
   },
 
@@ -304,7 +314,7 @@ export const CHAPTERS: Chapter[] = [
         title: '票据与照片组合工具',
         lead: '探索票据版式与个人照片的组合呈现',
         projectId: 'thermal-receipt-printer',
-        video: '/assets/aistudio/tool-collection/02.mp4',
+        video: '/assets/aistudio/tool-collection/02_x264.mp4',
         board: {
           items: [
             '/assets/aistudio/tool-collection/receipt-1.webp',
@@ -336,13 +346,6 @@ export const CHAPTERS: Chapter[] = [
           '/assets/aistudio/tool-collection/heritage-3.webp',
           '/assets/aistudio/tool-collection/heritage-4.webp',
         ],
-      },
-      {
-        id: 'pool-theme',
-        index: '05',
-        title: '泳池主题图片工具',
-        lead: '探索场景化的图片呈现形式',
-        video: '/assets/aistudio/tool-collection/05_x264.mp4',
       },
     ],
   },

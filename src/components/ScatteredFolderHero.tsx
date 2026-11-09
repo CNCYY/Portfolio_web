@@ -54,6 +54,7 @@ const ProfileSheetContent: React.FC<{ scale?: 'sm' | 'lg' }> = ({ scale = 'sm' }
       <div className="relative inline-block">
         <span
           aria-hidden="true"
+          data-parallax="0.12"
           className={`absolute inset-0 font-sans font-black tracking-tight text-stone-900 blur-lg opacity-25 ${titleCls}`}
         >
           PROFILE
@@ -150,7 +151,7 @@ export const ScatteredFolderHero: React.FC<Props> = ({
   return (
     <section
       id="hero-folder"
-      className="min-h-screen snap-start snap-always flex flex-col justify-between pt-8 pb-6 border-b border-stone-200 dot-grid overflow-hidden relative"
+      className="min-h-screen flex flex-col justify-between pt-8 pb-6 border-b border-stone-200 dot-grid overflow-hidden relative"
     >
       <div className="max-w-7xl mx-auto px-6 w-full flex-1 flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
@@ -246,7 +247,7 @@ export const ScatteredFolderHero: React.FC<Props> = ({
                 transition={folderSwingTransition(0.15)}
                 className="absolute inset-x-2 inset-y-4 bg-[#F7F5EF] rounded-3xl border border-stone-300/80 shadow-sm pointer-events-none z-0"
               >
-                <div className="absolute inset-0 opacity-25 bg-[radial-gradient(#1c1917_1.5px,transparent_1.5px)] [background-size:18px_18px]" />
+                <div data-parallax="0.18" className="absolute inset-0 opacity-25 bg-[radial-gradient(#1c1917_1.5px,transparent_1.5px)] [background-size:18px_18px]" />
               </motion.div>
 
               {/* Back Layer 1: Folder Back Cover & Pocket Bed */}

@@ -95,7 +95,7 @@ export const SplitScreenWorks: React.FC<Props> = ({
           <section
             key={project.id}
             id={`project-${project.id}`}
-            className="min-h-screen snap-start snap-always flex items-center justify-center py-6 sm:py-8 lg:py-10 px-4 sm:px-8 lg:px-12 relative overflow-hidden"
+            className="min-h-screen flex items-center justify-center py-6 sm:py-8 lg:py-10 px-4 sm:px-8 lg:px-12 relative overflow-hidden"
           >
             {/* Open Editorial Article without Outer Bounding Card Box */}
             <motion.article

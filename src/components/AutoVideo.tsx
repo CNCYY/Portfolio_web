@@ -13,7 +13,10 @@ import loadingArt from '../assets/loading-rummage.webp';
  * 部署后也显著降低带宽与内存占用。
  * 切换动画：使用处以 key={src} 触发 remount，新视频淡入；
  * 旧视频立即卸载（无退出动画），任何时刻只有一条流，零额外加载。
- * 底部细进度条：rAF 循环跟随 currentTime 更新，仅播放时运行。
+ * 底部细进度条：rAF 循环跟随 currentTime 更新，仅播放时运行；
+ * 同时是可拖动 scrubber——点击/按住轨道任意位置即 seek，拖动持续跟随
+ * （pointer capture 保证拖出轨道也不断手；preload="none" 的视频首次
+ * 拖动会先触发 load() 探测元数据，之后即可正常 seek）。
  * barColor：进度条填充色，由使用方按页面主题传入（默认白色）。
  */
 export const AutoVideo = ({
@@ -27,6 +30,8 @@ export const AutoVideo = ({
 }) => {
   const ref = useRef<HTMLVideoElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const draggingRef = useRef(false);
   const rafRef = useRef(0);
   const [active, setActive] = useState(false);
   const [ready, setReady] = useState(false);
@@ -84,6 +89,37 @@ export const AutoVideo = ({
     };
   }, [active, src]);
 
+  // 拖动进度条：按指针在轨道上的水平比例 seek，并手动同步一次条宽
+  // （暂停态下 rAF 循环不跑，拖动时需要自己更新）
+  const seekTo = (clientX: number) => {
+    const el = ref.current;
+    const track = trackRef.current;
+    if (!el || !track) return;
+    if (!(el.duration > 0)) {
+      // preload="none" 且元数据未就绪：先触发一次加载，下次拖动即可 seek
+      el.load();
+      return;
+    }
+    const r = track.getBoundingClientRect();
+    const ratio = Math.min(1, Math.max(0, (clientX - r.left) / r.width));
+    el.currentTime = ratio * el.duration;
+    const bar = barRef.current;
+    if (bar) bar.style.width = `${ratio * 100}%`;
+  };
+
+  const onScrubDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    seekTo(e.clientX);
+  };
+  const onScrubMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (draggingRef.current) seekTo(e.clientX);
+  };
+  const onScrubUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    draggingRef.current = false;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+  };
+
   return (
     <motion.div
       className="relative h-full overflow-hidden"
@@ -110,12 +146,22 @@ export const AutoVideo = ({
       >
         <img src={loadingArt} alt="" draggable={false} className="w-[120px] sm:w-[140px] h-auto" />
       </div>
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[5px] bg-white/20">
-        <div
-          ref={barRef}
-          className="h-full w-0 bg-white/85"
-          style={barColor ? { backgroundColor: barColor } : undefined}
-        />
+      {/* 进度条轨道：加高命中区（视觉条仍 5px），可点击/拖动 seek */}
+      <div
+        ref={trackRef}
+        onPointerDown={onScrubDown}
+        onPointerMove={onScrubMove}
+        onPointerUp={onScrubUp}
+        onPointerCancel={onScrubUp}
+        className="absolute inset-x-0 bottom-0 h-4 cursor-pointer touch-none"
+      >
+        <div className="absolute inset-x-0 bottom-0 h-[5px] bg-black/30">
+          <div
+            ref={barRef}
+            className="h-full w-0 bg-white/95"
+            style={barColor ? { backgroundColor: barColor } : undefined}
+          />
+        </div>
       </div>
     </motion.div>
   );

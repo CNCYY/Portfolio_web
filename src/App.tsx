@@ -1,4 +1,4 @@
-﻿import React, { useState, useMemo, useEffect, useRef } from 'react';
+﻿﻿﻿﻿import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ScatteredFolderHero } from './components/ScatteredFolderHero';
 import { ChapterPages } from './components/ChapterPages';
 import { StickyBottomFolderTabs, FolderTab } from './components/StickyBottomFolderTabs';
@@ -7,6 +7,7 @@ import { StickerBoard } from './components/StickerBoard';
 import { SwingBadge } from './components/SwingBadge';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ClickDoodles } from './components/ClickDoodles';
+import { ParallaxFlow } from './components/ui/ParallaxFlow';
 import { Tooltip } from './components/ui/tooltip-card';
 import { PROJECTS } from './data/portfolioData';
 import { CHAPTERS, PROJECT_TO_CHAPTER } from './data/chapters';
@@ -186,7 +187,7 @@ export default function App() {
       <div
         ref={containerRef}
         id="scroll-snap-viewport"
-      className="h-screen w-full overflow-y-auto overflow-x-hidden scroll-smooth snap-y snap-mandatory dot-grid text-stone-900 selection:bg-[#E5A99B] selection:text-stone-900 font-sans relative"
+      className="h-screen w-full overflow-y-auto overflow-x-hidden scroll-smooth dot-grid text-stone-900 selection:bg-[#E5A99B] selection:text-stone-900 font-sans relative"
     >
       {/* 可拿起/粘贴的全局装饰贴纸层（星星/圆点/图片/emoji） */}
       <StickerBoard />
@@ -200,7 +201,9 @@ export default function App() {
         onOpenSearch={() => setIsSearchOpen(true)}
       />
 
-      {/* 1. Hero with Left Profile + Right Scattered Pictures Folder Tabs (Snap Slide 1) */}
+      {/* 视差滚动编排：标记 data-parallax 的装饰层以不同速率跟随滚动，制造纵深 */}
+      <ParallaxFlow scrollerRef={containerRef}>
+      {/* 1. Hero with Left Profile + Right Scattered Pictures Folder Tabs */}
       <main className="w-full">
         <ScatteredFolderHero
           activeTab={activeTab}
@@ -216,11 +219,11 @@ export default function App() {
       {/* 3. Minimalist Colophon Footer (Final Snap Slide) */}
       <footer
         id="section-footer"
-        className="relative overflow-hidden min-h-[50vh] sm:min-h-[60vh] snap-start snap-always flex border-t border-stone-200 pb-16 bg-stone-100/30"
+        className="relative overflow-hidden min-h-[50vh] sm:min-h-[60vh] flex border-t border-stone-200 pb-16 bg-stone-100/30"
       >
         <div className="max-w-7xl mx-auto px-6 w-full flex flex-col sm:flex-row items-start justify-between gap-8">
-          {/* 左侧：CONNECT ME 卡套，从 footer 顶边垂下的物理挂牌 */}
-          <div className="flex w-full sm:w-auto items-center justify-center sm:justify-start self-start">
+          {/* 左侧：CONNECT ME 卡套，从 footer 顶边垂下的物理挂牌（视差慢速层） */}
+          <div data-parallax="0.1" className="flex w-full sm:w-auto items-center justify-center sm:justify-start self-start">
             <SwingBadge ropeLength={150}>
               <div className="relative w-[430px] sm:w-[600px] select-none">
                 <img
@@ -257,6 +260,7 @@ export default function App() {
           </div>
         </div>
       </footer>
+      </ParallaxFlow>
 
       {/* Quick Search */}
       <SearchModal

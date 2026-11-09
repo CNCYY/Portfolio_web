@@ -20,10 +20,10 @@ const CORE_TONES: Record<string, string> = {
 
 /** 每页视频进度条颜色 = 该页荧光底块色（对应 index.css 中 CORE_TONES 的 --cv-bg） */
 const BAR_COLORS: Record<string, string> = {
-  'svga-tools': '#f6f0cd',
-  'ai-gift': '#f2d7e9',
-  'vibe-h5': '#cfe0f2',
-  'creative-collection': '#d7e8cf',
+  'svga-tools': '#e3d795',
+  'ai-gift': '#e5a8d4',
+  'vibe-h5': '#9cc2e8',
+  'creative-collection': '#a9d18e',
 };
 
 /**
@@ -140,18 +140,22 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
         const mediaRight = Boolean(ch.demoVideo) || ch.sections.some((s) => s.video);
         const activeSection = ch.sections.find((s) => s.id === expanded[ch.id]);
         /* 页面级固定视频优先（第一页）；否则用当前选中子项的演示视频（第二页） */
-        const videoSrc = ch.demoVideo ?? activeSection?.video;
+        // inlineList 页视频常驻：固定取第一个配置了视频的子项，不随选中子项切换
+        const videoMeta = ch.inlineList ? ch.sections.find((s) => s.video) : activeSection;
+        const videoSrc = ch.demoVideo ?? videoMeta?.video;
 
         // 子项详情：分点说明 → 流程胶囊 → 设计意图；withMedia 控制是否渲染配图
         const renderDetail = (s: ChapterSection, withMedia: boolean) => (
           <>
             {s.points && (
               <dl className="space-y-3.5">
-                {s.points.map((p) => (
-                  <div key={p.label}>
-                    <dt className="text-[11px] font-sans uppercase tracking-widest text-stone-400">
-                      {p.label}
-                    </dt>
+                {s.points.map((p, pi) => (
+                  <div key={p.label ?? pi}>
+                    {p.label && (
+                      <dt className="text-[11px] font-sans uppercase tracking-widest text-stone-400">
+                        {p.label}
+                      </dt>
+                    )}
                     <dd className="text-[15px] text-stone-700 leading-relaxed mt-1">
                       {p.text}
                     </dd>
@@ -220,7 +224,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
         // inlineList 大页（第三页）：列表内嵌左列，内容在列表项下方向下展开，走纵向手风琴
         const accordion =
           mediaRight && !ch.inlineList ? (
-          <div className="panel-soft flex items-stretch px-4">
+          <div className="panel-soft flex items-stretch">
             {/* 左：列表项 */}
             <div className="w-[42%] shrink-0">
               {ch.sections.map((s) => {
@@ -301,11 +305,13 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                       <div className="flex items-start gap-8">
                         {activeSection.points && (
                           <dl className="flex-1 min-w-0 space-y-3.5">
-                            {activeSection.points.map((p) => (
-                              <div key={p.label}>
-                                <dt className="text-[11px] font-sans uppercase tracking-widest text-stone-400">
-                                  {p.label}
-                                </dt>
+                            {activeSection.points.map((p, pi) => (
+                              <div key={p.label ?? pi}>
+                                {p.label && (
+                                  <dt className="text-[11px] font-sans uppercase tracking-widest text-stone-400">
+                                    {p.label}
+                                  </dt>
+                                )}
                                 <dd className="text-[15px] text-stone-700 leading-relaxed mt-1">
                                   {p.text}
                                 </dd>
@@ -431,7 +437,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
             <section
               key={ch.id}
               id={`chapter-${ch.id}`}
-              className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32"
+              className="dot-grid-soft min-h-screen w-full flex items-center pt-10 pb-32"
             >
               {/* 下滑滑入视口时内容由小到大缩放显现 */}
               <motion.div
@@ -619,12 +625,12 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                       /* 原始尺寸面板：视频宽度由 videoWidth 决定、高度按比例自适应，
                          适合内容较少的页面（如 H5 活动页） */
                       <div
-                        className={`mx-auto overflow-hidden rounded-xl bg-stone-100 ${activeSection?.videoWidth ?? 'w-full'}`}
+                        className={`mx-auto overflow-hidden rounded-xl bg-stone-100 ${videoMeta?.videoWidth ?? 'w-full'}`}
                       >
                         <AutoVideo
                           key={videoSrc}
                           src={videoSrc}
-                          className={`w-full h-auto ${activeSection?.videoScale ?? ''}`}
+                          className={`w-full h-auto ${videoMeta?.videoScale ?? ''}`}
                           barColor={BAR_COLORS[ch.id]}
                         />
                       </div>
@@ -636,10 +642,10 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                           key={videoSrc}
                           src={videoSrc}
                           className={`absolute inset-0 m-auto ${
-                            activeSection?.videoWidth
+                            videoMeta?.videoWidth
                               ? 'h-full w-auto'
                               : 'h-full w-full object-cover'
-                          } ${activeSection?.videoScale ?? ''}`}
+                          } ${videoMeta?.videoScale ?? ''}`}
                           barColor={BAR_COLORS[ch.id]}
                         />
                       </div>

@@ -29,20 +29,11 @@
   font-family: var(--font-sans);
 }
 
-/* Scroll snap physics & smooth momentum */
+/* 滚动视口（已取消 snap 吸附，滚动完全自由，配合 ParallaxFlow 视差） */
 #scroll-snap-viewport {
-  scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-}
-
-.snap-start {
-  scroll-snap-align: start;
-}
-
-.snap-always {
-  scroll-snap-stop: always;
 }
 
 /* Subtle editorial paper grain & shadow depths */
