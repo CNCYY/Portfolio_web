@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { ChevronDown, Github } from 'lucide-react';
 import { Chapter, ChapterSection } from '../data/chapters';
@@ -24,6 +24,88 @@ const BAR_COLORS: Record<string, string> = {
   'ai-gift': '#e5a8d4',
   'vibe-h5': '#9cc2e8',
   'creative-collection': '#a9d18e',
+};
+
+/** LINK 徽章的手绘外框（与内部涂色共用同一轮廓） */
+const LINK_FRAME =
+  'M 7,5 C 28,2 57,3 77,5 C 79,14 79,23 77,31 C 55,33 28,33 7,31 C 5,22 5,13 7,5 Z';
+
+/**
+ * 手绘风格的 LINK 链接：铅笔勾出的歪斜框 + 手写感文字，
+ * 用于第四页「个人创意集锦」中可在小红书直接体验的工具。
+ * 悬停时仿照点击涂鸦里的蜡笔爱心：用斜向排线把框内涂满。
+ */
+const HandDrawnLink = ({ href }: { href: string }) => {
+  const uid = useId().replace(/:/g, '');
+  const clipId = `link-clip-${uid}`;
+  const hatchId = `link-hatch-${uid}`;
+
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label="在线体验"
+      className="group relative inline-flex shrink-0 items-center justify-center px-3.5 py-2 -rotate-2 transition-transform duration-300 hover:-rotate-1 hover:scale-[1.05]"
+    >
+      <svg
+        className="absolute inset-0 w-full h-full"
+        viewBox="0 0 84 36"
+        preserveAspectRatio="none"
+        fill="none"
+        aria-hidden="true"
+      >
+        <defs>
+          <clipPath id={clipId}>
+            <path d={LINK_FRAME} />
+          </clipPath>
+          {/* 蜡笔排线：与爱心涂鸦一致的斜向粗笔触 */}
+          <pattern
+            id={hatchId}
+            width="5"
+            height="5"
+            patternUnits="userSpaceOnUse"
+            patternTransform="rotate(38)"
+          >
+            <line x1="0" y1="0" x2="0" y2="5" stroke="#D8B24A" strokeWidth="2.2" />
+          </pattern>
+        </defs>
+
+        {/* 涂色层：从左向右扫过，铺满整个框 */}
+        <g clipPath={`url(#${clipId})`}>
+          <rect
+            x="0"
+            y="0"
+            width="84"
+            height="36"
+            fill={`url(#${hatchId})`}
+            opacity="0.45"
+            className="origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-[420ms] ease-out"
+            style={{ transformBox: 'fill-box' }}
+          />
+        </g>
+
+        <path
+          d={LINK_FRAME}
+          stroke="#D8B24A"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+        <path
+          d="M 11,8 C 30,6 52,6 73,9"
+          stroke="#D8B24A"
+          strokeWidth="1.3"
+          strokeLinecap="round"
+          opacity="0.6"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      <span className="relative font-hand text-[21px] leading-none text-[#4E6E9E] group-hover:text-[#35507A]">
+        LINK
+      </span>
+    </a>
+  );
 };
 
 /**
@@ -286,17 +368,31 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                       transition={{ duration: 0.25, ease: 'easeOut' }}
                       className="pt-3.5 space-y-5"
                     >
-                    {/* 左上角 GitHub 仓库链接 */}
-                    {activeSection.github && (
-                      <a
-                        href={activeSection.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[12px] font-sans font-medium uppercase tracking-widest text-stone-900 hover:underline"
-                      >
-                        <Github className="w-3 h-3" />
-                        GitHub
-                      </a>
+                    {/* 左上角 GitHub 仓库链接 + 右侧在线体验链接 */}
+                    {(activeSection.github || activeSection.site) && (
+                      <div className="flex items-center gap-5">
+                        {activeSection.github && (
+                          <a
+                            href={activeSection.github}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1.5 text-[12px] font-sans font-medium uppercase tracking-widest text-stone-900 hover:underline"
+                          >
+                            <Github className="w-3 h-3" />
+                            GitHub
+                          </a>
+                        )}
+                        {activeSection.site && (
+                          <a
+                            href={activeSection.site}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1.5 text-[12px] font-sans font-medium uppercase tracking-widest text-stone-900 hover:underline"
+                          >
+                            LINK
+                          </a>
+                        )}
+                      </div>
                     )}
 
                     {/* 左：分点说明；右：前后对比滑块 */}
@@ -437,7 +533,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
             <section
               key={ch.id}
               id={`chapter-${ch.id}`}
-              className="dot-grid-soft min-h-screen w-full flex items-center pt-10 pb-32"
+              className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32 pr-[34px] sm:pr-[42px]"
             >
               {/* 下滑滑入视口时内容由小到大缩放显现 */}
               <motion.div
@@ -527,38 +623,44 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                       const isActive = expanded[ch.id] === s.id;
 
                       return (
-                        <button
-                          key={s.id}
-                          onClick={() => {
-                            if (!isActive) setExpanded((prev) => ({ ...prev, [ch.id]: s.id }));
-                          }}
-                          aria-expanded={isActive}
-                          className="w-full flex items-start gap-3 py-4 text-left group cursor-pointer"
-                        >
-                          <span
-                            className={`font-sans text-[12px] pt-1 w-6 shrink-0 transition-colors ${
-                              isActive ? 'text-stone-900' : 'text-stone-400 group-hover:text-stone-600'
-                            }`}
+                        <div key={s.id} className="flex items-start gap-2">
+                          <button
+                            onClick={() => {
+                              if (!isActive) setExpanded((prev) => ({ ...prev, [ch.id]: s.id }));
+                            }}
+                            aria-expanded={isActive}
+                            className="flex-1 min-w-0 flex items-start gap-3 py-4 text-left group cursor-pointer"
                           >
-                            {s.index}
-                          </span>
-                          <span className="flex-1 min-w-0">
                             <span
-                              className={`block text-[16px] font-medium transition-colors ${
-                                isActive ? 'text-stone-950' : 'text-stone-400 group-hover:text-stone-900'
+                              className={`font-sans text-[12px] pt-1 w-6 shrink-0 transition-colors ${
+                                isActive ? 'text-stone-900' : 'text-stone-400 group-hover:text-stone-600'
                               }`}
                             >
-                              {s.title}
+                              {s.index}
                             </span>
-                            <span
-                              className={`block text-[12px] mt-1 leading-relaxed transition-colors ${
-                                isActive ? 'text-stone-500' : 'text-stone-400 group-hover:text-stone-500'
-                              }`}
-                            >
-                              {s.lead}
+                            <span className="flex-1 min-w-0">
+                              <span
+                                className={`block text-[16px] font-medium transition-colors ${
+                                  isActive ? 'text-stone-950' : 'text-stone-400 group-hover:text-stone-900'
+                                }`}
+                              >
+                                {s.title}
+                              </span>
+                              <span
+                                className={`block text-[12px] mt-1 leading-relaxed transition-colors ${
+                                  isActive ? 'text-stone-500' : 'text-stone-400 group-hover:text-stone-500'
+                                }`}
+                              >
+                                {s.lead}
+                              </span>
                             </span>
-                          </span>
-                        </button>
+                          </button>
+                          {s.site && (
+                            <div className="pt-3.5">
+                              <HandDrawnLink href={s.site} />
+                            </div>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
@@ -572,7 +674,7 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
           <section
             key={ch.id}
             id={`chapter-${ch.id}`}
-            className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32"
+            className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-32 pr-[34px] sm:pr-[42px]"
           >
             {/* 下滑滑入视口时内容由小到大缩放显现 */}
             <motion.div
@@ -619,7 +721,8 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
 
               {/* ---------- 右列：演示视频；未配置 demoVideo 时右侧为子项手风琴 ---------- */}
               {mediaRight ? (
-                <div className="lg:col-span-7">
+                <div className="lg:col-span-7 relative">
+                  <div className="relative">
                   {videoSrc ? (
                     ch.videoPanel === 'original' ? (
                       /* 原始尺寸面板：视频宽度由 videoWidth 决定、高度按比例自适应，
@@ -658,6 +761,29 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
                       <Gallery images={activeSection.gallery} />
                     )
                   ) : null}
+
+                  {/* 首页演示视频右缘的便签贴纸：暂隐藏，需要时取消注释即可恢复（右缘版 / 下方版） */}
+                  {false && ch.demoVideo && (
+                    <img
+                      src="/assets/stickers/tag-01.webp"
+                      alt=""
+                      aria-hidden="true"
+                      draggable={false}
+                      className="hidden xl:block pointer-events-none select-none absolute right-0 top-1/2 translate-x-[90%] -translate-y-1/2 z-10 w-[133px] rotate-0 drop-shadow-[0_6px_14px_rgba(60,45,25,0.22)]"
+                    />
+                  )}
+                  </div>
+
+                  {/* 临近 lg 断点（栅格堆叠）时：贴纸落到视频下方 */}
+                  {false && ch.demoVideo && (
+                    <img
+                      src="/assets/stickers/tag-01.webp"
+                      alt=""
+                      aria-hidden="true"
+                      draggable={false}
+                      className="xl:hidden block mt-6 w-[170px] pointer-events-none select-none drop-shadow-[0_6px_14px_rgba(60,45,25,0.22)]"
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="lg:col-span-7">{accordion}</div>

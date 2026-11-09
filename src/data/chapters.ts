@@ -25,6 +25,8 @@ export interface ChapterSection {
   flow2Label?: string;
   /** GitHub 仓库链接，渲染在内容面板左上角 */
   github?: string;
+  /** 在线体验链接，渲染在 GitHub 右侧 */
+  site?: string;
   /** 子项演示视频，配置后右侧视频随选中子项切换 */
   video?: string;
   /** 视频宽度类（不配置默认 w-full） */
@@ -99,6 +101,7 @@ export const CHAPTERS: Chapter[] = [
         beforeImage: '/assets/aistudio/svga_ki_before.webp',
         afterImage: '/assets/aistudio/svga_ki_after.webp',
         github: 'https://github.com/CNCYY/svga-tool.git',
+        site: 'https://svga-tool.pages.dev/',
         points: [
           {
             label: '底层逻辑',
@@ -122,6 +125,7 @@ export const CHAPTERS: Chapter[] = [
         beforeImage: '/assets/aistudio/svga_lm_before.webp',
         afterImage: '/assets/aistudio/svga_lm_after.webp',
         github: 'https://github.com/CNCYY/svga-layertool.git',
+        site: 'https://svga-layertool.pages.dev/',
         points: [
           {
             label: '底层逻辑',
@@ -307,6 +311,7 @@ export const CHAPTERS: Chapter[] = [
         lead: '小红书1w+浏览；小工具200+使用；200+分享',
         projectId: 'heytea-foldable-card',
         video: '/assets/aistudio/tool-collection/01_x264.mp4',
+        site: 'https://www.xiaohongshu.com/s/poster?bgimg=https%3A%2F%2Fsns-redskillhub-s1.xhscdn.com%2Fred_app_image%2F1040g4m8327biqgkr786g5pt8alh39abnvb7ro78%3Fsign%3D685a68d59c699a253fee144824ae31d9%26t%3D6cd2c17f&xhsshare=CopyLink&appuid=67a85562000000000d00a977&apptime=1794215426&deeplink=xhsdiscover%3A%2F%2FminiTool%2F6a85a63cf994f90015161f40%3Fsource%3Dh5%26page_key%3D28%26xhsMpScreenMode%3Dfull%26share_id%3D987e0667660b4ee9ae392ab812f24df5%26share_channel%3Dcopy_link',
       },
       {
         id: 'receipt-photo',
@@ -340,6 +345,7 @@ export const CHAPTERS: Chapter[] = [
         lead: '探索传统纹样的视觉处理与效果表达',
         projectId: 'chinese-heritage-pattern',
         video: '/assets/aistudio/tool-collection/04_x264.mp4',
+        site: 'https://www.xiaohongshu.com/s/poster?bgimg=https%3A%2F%2Fsns-redskillhub-s1.xhscdn.com%2Fred_app_image%2F1040g4m8327buh4dn78kg5pt8alh39abn3hn78pg%3Fsign%3D2a70746d8b71b7363e407194ad75202a%26t%3D6cd32166&xhsshare=CopyLink&appuid=67a85562000000000d00a977&apptime=1794239975&deeplink=xhsdiscover%3A%2F%2FminiTool%2F6aa2dc75a6dc190015b1959b%3Fsource%3Dh5%26page_key%3D28%26xhsMpScreenMode%3Dfull%26share_id%3D459ee29bc3a74afc80712635ec92a36d%26share_channel%3Dcopy_link',
         images: [
           '/assets/aistudio/tool-collection/heritage-1.webp',
           '/assets/aistudio/tool-collection/heritage-2.webp',

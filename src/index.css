@@ -4,6 +4,7 @@
   :root {
     --font-serif: 'Playfair Display', Georgia, serif;
     --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-hand: 'Caveat', 'Segoe Script', 'Bradley Hand', cursive;
   }
 
   html {
@@ -29,7 +30,11 @@
   font-family: var(--font-sans);
 }
 
-/* 滚动视口（已取消 snap 吸附，滚动完全自由，配合 ParallaxFlow 视差） */
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+/* 滚动视口：整屏分页吸附（每页吸附到顶部），滚动本身保持平滑 + 视差 */
 #scroll-snap-viewport {
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -606,3 +611,4 @@ body.sticker-picking * {
   object-fit: cover;
   -webkit-user-drag: none;
 }
+

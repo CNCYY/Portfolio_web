@@ -154,6 +154,21 @@ export default function App() {
     };
   }, [allSectionIds]);
 
+  // 测量滚动条宽度写入 CSS 变量：侧标签栏贴其内侧，层级为 内容 → 标签栏 → 滚动条
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const update = () => {
+      const w = el.offsetWidth - el.clientWidth;
+      document.documentElement.style.setProperty('--scrollbar-w', `${w}px`);
+    };
+
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+
   // Keyboard navigation (ArrowDown / ArrowUp / PageDown / PageUp) for swift snapped slide flipping
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -187,16 +202,16 @@ export default function App() {
       <div
         ref={containerRef}
         id="scroll-snap-viewport"
-      className="h-screen w-full overflow-y-auto overflow-x-hidden scroll-smooth dot-grid text-stone-900 selection:bg-[#E5A99B] selection:text-stone-900 font-sans relative"
+      className="h-screen w-full overflow-y-auto overflow-x-hidden scroll-smooth snap-y snap-mandatory text-stone-900 selection:bg-[#E5A99B] selection:text-stone-900 font-sans relative"
     >
       {/* 可拿起/粘贴的全局装饰贴纸层（星星/圆点/图片/emoji） */}
       <StickerBoard />
 
-      {/* Sticky Bottom Folder Tabs (Appears on slide 2+ matching user reference image) */}
+      {/* Folder tab nav growing from the sheet's top edge（与页面同纸张；封面页隐藏，进入正文后吸附顶端跟随） */}
       <StickyBottomFolderTabs
         tabs={folderTabs}
         activeSectionId={activeSectionId}
-        isVisible={activeSectionId !== 'hero-folder'}
+        isVisible={activeSectionId !== 'hero-folder' && activeSectionId !== 'section-footer'}
         onNavigateToSection={handleNavigateToSection}
         onOpenSearch={() => setIsSearchOpen(true)}
       />
@@ -219,7 +234,7 @@ export default function App() {
       {/* 3. Minimalist Colophon Footer (Final Snap Slide) */}
       <footer
         id="section-footer"
-        className="relative overflow-hidden min-h-[50vh] sm:min-h-[60vh] flex border-t border-stone-200 pb-16 bg-stone-100/30"
+        className="relative overflow-hidden snap-start snap-always min-h-[50vh] sm:min-h-[60vh] flex border-t border-stone-200 pb-16 bg-stone-100/30"
       >
         <div className="max-w-7xl mx-auto px-6 w-full flex flex-col sm:flex-row items-start justify-between gap-8">
           {/* 左侧：CONNECT ME 卡套，从 footer 顶边垂下的物理挂牌（视差慢速层） */}

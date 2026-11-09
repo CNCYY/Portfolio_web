@@ -3,6 +3,7 @@ import { motion, AnimatePresence, type Transition } from 'motion/react';
 import { DESIGNER_INFO, PROJECTS } from '../data/portfolioData';
 import { X } from 'lucide-react';
 import avatarSticker from '../assets/stickers/avatar.png';
+import ropeSticker from '../assets/stickers/rope.png';
 
 interface Props {
   activeTab: 'all' | 'tools' | 'interaction';
@@ -25,13 +26,13 @@ const PROFILE_ITEMS = [
     line2: '业务机会识别、玩法机制、AI 工作流、系统衔接',
   },
   {
-    no: '04',
+    no: '03',
     name: 'AI+H5活动',
     line1: 'vibe coding 的实际落地 / 社交互动玩法',
     line2: '通过 ai 将创意快速落地、快速简便上线',
   },
   {
-    no: '05',
+    no: '04',
     name: '其他探索',
     line1: '个人创意原型',
     line2: '视觉探索、交互实验、快速实现',
@@ -57,10 +58,10 @@ const ProfileSheetContent: React.FC<{ scale?: 'sm' | 'lg' }> = ({ scale = 'sm' }
           data-parallax="0.12"
           className={`absolute inset-0 font-sans font-black tracking-tight text-stone-900 blur-lg opacity-25 ${titleCls}`}
         >
-          PROFILE
+          PORTFOLIO
         </span>
         <span className={`relative font-sans font-black tracking-tight text-stone-900 ${titleCls}`}>
-          PROFILE
+          PORTFOLIO
         </span>
       </div>
 
@@ -151,7 +152,7 @@ export const ScatteredFolderHero: React.FC<Props> = ({
   return (
     <section
       id="hero-folder"
-      className="min-h-screen flex flex-col justify-between pt-8 pb-6 border-b border-stone-200 dot-grid overflow-hidden relative"
+      className="min-h-screen snap-start snap-always flex flex-col justify-between pt-8 pb-6 border-b border-stone-200 dot-grid overflow-hidden relative"
     >
       <div className="max-w-7xl mx-auto px-6 w-full flex-1 flex items-center">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
@@ -426,6 +427,16 @@ export const ScatteredFolderHero: React.FC<Props> = ({
                     </span>
                   </div>
                 </div>
+
+                {/* 横跨口袋的绳带：作为口袋子元素定位，随口袋同宽，任何视口宽度都不会错位 */}
+                <img
+                  src={ropeSticker}
+                  alt=""
+                  aria-hidden="true"
+                  draggable={false}
+                  className="absolute left-1/2 top-1/2 h-[480px] w-auto max-w-none pointer-events-none select-none z-10 drop-shadow-[0_2px_4px_rgba(28,25,23,0.18)]"
+                  style={{ transform: 'translate(-50%, -50%) rotate(91.5deg)' }}
+                />
               </motion.div>
 
             </div>

@@ -14,11 +14,22 @@ export interface FolderTab {
 interface Props {
   tabs: FolderTab[];
   activeSectionId: string;
+  /** 是否显示导航（封面页隐藏，进入正文后出现） */
   isVisible: boolean;
   onNavigateToSection: (sectionId: string) => void;
   onOpenSearch?: () => void;
   onOpenContact?: () => void;
 }
+
+/* 侧边书本索引：与纸面同色系的两种状态，选中项透出纸色与页面连成一体 */
+const INACTIVE_TONE = { fill: '#F1EDE2', hover: '#F7F4EA', text: '#A8A29E' };
+const ACTIVE_TONE = { fill: '#FCFBF9', text: '#44403C' };
+
+/* Die-cut 轮廓（水平翻转）：右缘中部竖直贴向屏幕边缘，上下两端 45° 斜切收进，
+   相邻标签拼出楔形豁口，形成书本索引的斜切端头（viewBox 0 0 44 100） */
+const TAB_PATH = 'M 0,0 L 14,0 L 43,20 L 43,80 L 14,100 L 0,100 Z';
+/* 开放描边路径：刻意缺少左缘竖线，左缘交给内阴影处理 */
+const TAB_OUTLINE = 'M 0,0 L 14,0 L 43,20 L 43,80 L 14,100 L 0,100';
 
 export const StickyBottomFolderTabs: React.FC<Props> = ({
   tabs,
@@ -28,85 +39,101 @@ export const StickyBottomFolderTabs: React.FC<Props> = ({
 }) => {
   return (
     <nav
-      aria-label="Editorial folder bottom tabs"
-      className={`fixed bottom-0 inset-x-0 z-40 transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] pointer-events-none select-none ${
+      aria-label="Editorial folder tabs"
+      style={{ right: 'var(--scrollbar-w, 0px)' }}
+      className={`fixed top-0 bottom-0 z-40 flex flex-col select-none transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
         isVisible
-          ? 'translate-y-0 opacity-100'
-          : 'translate-y-full opacity-0 pointer-events-none'
+          ? 'translate-x-0 opacity-100'
+          : 'translate-x-full opacity-0 pointer-events-none'
       }`}
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-8 flex flex-col items-center overflow-visible">
-        {/* Horizontal Row of Die-Cut Archival Paper Folder Tabs (Taller headroom for popups) */}
-        <div className="flex items-end justify-center w-full overflow-x-auto no-scrollbar pointer-events-auto pt-4 sm:pt-6 pb-0 px-3 -mb-[1px] min-h-[54px] sm:min-h-[60px]">
-          {tabs.map((tab) => {
-            const isActive = tab.id === activeSectionId;
+      {tabs.map((tab) => {
+        const isActive = tab.id === activeSectionId;
+        const tone = isActive ? ACTIVE_TONE : INACTIVE_TONE;
 
-            return (
-              <button
-                key={tab.id}
-                onClick={() => onNavigateToSection(tab.id)}
-                aria-current={isActive ? 'true' : undefined}
-                className={`group relative flex items-end justify-center transition-[height,box-shadow,background-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] -ml-2.5 sm:-ml-3 first:ml-0 shrink-0 cursor-pointer ${
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onNavigateToSection(tab.id)}
+            aria-current={isActive ? 'true' : undefined}
+            onMouseEnter={(e) => {
+              if (!isActive) e.currentTarget.style.setProperty('--tone', INACTIVE_TONE.hover);
+            }}
+            onMouseLeave={(e) => {
+              if (!isActive) e.currentTarget.style.setProperty('--tone', INACTIVE_TONE.fill);
+            }}
+            style={{ '--tone': tone.fill } as React.CSSProperties}
+            className={`folder-tab-btn group relative flex-1 min-h-0 flex items-center justify-center cursor-pointer w-[34px] sm:w-[42px] ${
+              isActive ? 'z-30' : 'z-10 hover:z-20'
+            }`}
+          >
+            {/* 模切轮廓：选中项不描左边线，未选中项左缘用内阴影表现凹陷 */}
+            <svg
+              className="absolute inset-0 w-full h-full -z-10 pointer-events-none"
+              viewBox="0 0 44 100"
+              preserveAspectRatio="none"
+            >
+              <defs>
+                <clipPath id={`tab-clip-${tab.id}`}>
+                  <path d={TAB_PATH} />
+                </clipPath>
+                <linearGradient id={`tab-inset-${tab.id}`} x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stopColor="#2E2A22" stopOpacity="0.16" />
+                  <stop offset="0.22" stopColor="#2E2A22" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path
+                d={TAB_PATH}
+                fill="var(--tone)"
+                className="transition-[fill] duration-300"
+              />
+              {!isActive && (
+                <rect
+                  x="0"
+                  y="0"
+                  width="44"
+                  height="100"
+                  fill={`url(#tab-inset-${tab.id})`}
+                  clipPath={`url(#tab-clip-${tab.id})`}
+                />
+              )}
+              {/* 开放描边：不含左缘竖线，只勾上下斜切与右缘 */}
+              <path
+                d={TAB_OUTLINE}
+                fill="none"
+                stroke="#E2DCCC"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+
+            {/* 标签文字：顺时针旋转 90°，自上而下阅读 */}
+            <div
+              className="flex items-baseline gap-1 whitespace-nowrap"
+              style={{ transform: 'rotate(90deg)' }}
+            >
+              <span
+                className={`font-sans tracking-[0.15em] transition-colors duration-300 ${
                   isActive
-                    ? 'h-[44px] sm:h-[48px] z-30'
-                    : 'h-[32px] sm:h-[35px] z-10 hover:h-[37px] sm:hover:h-[40px] hover:z-20'
+                    ? 'font-semibold text-xs sm:text-[13px]'
+                    : 'font-medium text-[10px] sm:text-[11px]'
                 }`}
+                style={{ color: tone.text }}
               >
-                {/* Authentic Die-Cut Folder Tab SVG Silhouette (Exact match to image_78e6d42f.webp) */}
-                <svg
-                  className="absolute inset-0 w-full h-full -z-10 pointer-events-none filter drop-shadow-[0_-2px_6px_rgba(40,30,20,0.04)]"
-                  viewBox="0 0 100 36"
-                  preserveAspectRatio="none"
+                {isActive ? (tab.activeLabel ?? tab.label) : tab.label}
+              </span>
+              {!isActive && tab.subtext && (
+                <span
+                  className="text-[9px] font-normal opacity-70"
+                  style={{ color: tone.text }}
                 >
-                  <path
-                    d="M 0,36 C 6,36 8,8 14,2 C 16,0 20,0 24,0 L 76,0 C 80,0 84,0 86,2 C 92,8 94,36 100,36 Z"
-                    fill={isActive ? '#FBF9F2' : '#ECE8DB'}
-                    stroke="#D8D2C2"
-                    strokeWidth="1"
-                    vectorEffect="non-scaling-stroke"
-                    className="transition-colors duration-300 group-hover:fill-[#F4F1E6]"
-                  />
-                  {/* Bottom boundary line: open on active tab to merge seamlessly into folder sheet below */}
-                  <line
-                    x1="0"
-                    y1="36"
-                    x2="100"
-                    y2="36"
-                    stroke={isActive ? '#FBF9F2' : '#D8D2C2'}
-                    strokeWidth="1.5"
-                    vectorEffect="non-scaling-stroke"
-                  />
-                </svg>
-
-                {/* Tab Label Content */}
-                <div className="px-4 sm:px-6 h-full flex items-center justify-center gap-1.5 whitespace-nowrap pt-1">
-                  {isActive ? (
-                    /* Active Tab */
-                    <span className="font-sans tracking-wide text-stone-900 font-semibold text-xs sm:text-[13px]">
-                      {tab.activeLabel ?? tab.label}
-                    </span>
-                  ) : (
-                    /* Inactive Tab */
-                    <div className="flex items-baseline gap-1 text-stone-600 group-hover:text-stone-950 transition-colors">
-                      <span className="font-sans text-[11px] sm:text-xs font-medium tracking-wide">
-                        {tab.label}
-                      </span>
-                      {tab.subtext && (
-                        <span className="text-[9px] sm:text-[10px] text-stone-400 font-normal">
-                          {tab.subtext}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Continuous Bottom Cream Archival Folder Ledge (Forms one physical sheet with active tab) */}
-        <div className="w-full h-3 sm:h-3.5 bg-[#FBF9F2] border-t border-[#D8D2C2] shadow-[0_-2px_10px_rgba(40,30,20,0.03)] pointer-events-auto" />
-      </div>
+                  {tab.subtext}
+                </span>
+              )}
+            </div>
+          </button>
+        );
+      })}
     </nav>
   );
 };
