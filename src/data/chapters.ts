@@ -382,6 +382,8 @@ export const CHAPTERS: Chapter[] = [
 export const PROJECT_TO_CHAPTER: Record<string, string> = {
   'svga-automation-tools': 'svga-tools',
   'ai-gift-generator': 'ai-gift',
+  // 封面上的 AI 礼物折页卡（装饰卡）指向 H5 活动大页
+  'ai-gift-fold-page': 'vibe-h5',
   'heytea-foldable-card': 'creative-collection',
   'thermal-receipt-printer': 'creative-collection',
   'chinese-heritage-pattern': 'creative-collection',

@@ -396,7 +396,7 @@ export const ScatteredFolderHero: React.FC<Props> = ({
                   y: 22,
                   transition: { type: 'spring', stiffness: 300, damping: 22 },
                 }}
-                onClick={() => onSelectProjectCard(aiGiftProject.id)}
+                onClick={() => onSelectProjectCard('ai-gift-fold-page')}
                 className="absolute right-1 top-[72px] w-64 aspect-[4/5] cursor-pointer group"
               >
                 <img
