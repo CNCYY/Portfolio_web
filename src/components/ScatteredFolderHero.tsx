@@ -9,10 +9,12 @@ interface Props {
   activeTab: 'all' | 'tools' | 'interaction';
   setActiveTab: (tab: 'all' | 'tools' | 'interaction') => void;
   onSelectProjectCard: (projectId: string) => void;
+  /** 点击 AIGC 缩略卡：跳转到「AIGC 产出」页 */
+  onOpenAigcPage?: () => void;
   activeProjectInView?: string;
 }
 
-const PROFILE_ITEMS = [
+const PROFILE_ITEMS: { no: string; name: string; line1: string; line2?: string }[] = [
   {
     no: '01',
     name: '物料定制平台',
@@ -36,6 +38,11 @@ const PROFILE_ITEMS = [
     name: '其他探索',
     line1: '个人创意原型',
     line2: '视觉探索、交互实验、快速实现',
+  },
+  {
+    no: '05',
+    name: '一些AIGC产出',
+    line1: '在视频礼物中的尝试',
   },
 ];
 
@@ -74,7 +81,7 @@ const ProfileSheetContent: React.FC<{ scale?: 'sm' | 'lg' }> = ({ scale = 'sm' }
             </div>
             <div className={`text-stone-600 font-sans ${descCls}`}>
               <p>{item.line1}</p>
-              <p>{item.line2}</p>
+              {item.line2 && <p>{item.line2}</p>}
             </div>
           </div>
         ))}
@@ -119,6 +126,7 @@ export const ScatteredFolderHero: React.FC<Props> = ({
   activeTab,
   setActiveTab,
   onSelectProjectCard,
+  onOpenAigcPage,
   activeProjectInView,
 }) => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -343,6 +351,34 @@ export const ScatteredFolderHero: React.FC<Props> = ({
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-contain drop-shadow-[0_14px_30px_rgba(0,0,0,0.18)] group-hover:scale-108 transition-transform duration-500"
                 />
+              </motion.div>
+
+              {/* ========================================================
+                  SCATTERED PHOTO 2.5: AIGC 产出缩略卡（位于喜茶小卡右侧）
+                  点击跳转到「AIGC 产出」页
+                 ======================================================== */}
+              <motion.div
+                style={{ zIndex: 17 }}
+                initial={{ x: 60, y: 120, rotate: -22, opacity: 0 }}
+                animate={photosReady ? { x: 0, y: 0, rotate: -7, opacity: 1 } : { x: 60, y: 120, rotate: -22, opacity: 0 }}
+                transition={pour(1.15)}
+                whileHover={{
+                  rotate: -4,
+                  y: -12,
+                  transition: { type: 'spring', stiffness: 300, damping: 22 },
+                }}
+                onClick={onOpenAigcPage}
+                className="absolute left-[340px] top-[176px] w-40 aspect-square cursor-pointer group"
+              >
+                <img
+                  src="/assets/aigc/thumb-03.png"
+                  alt="一些 AIGC 产出"
+                  draggable={false}
+                  className="w-full h-full object-contain drop-shadow-[0_12px_26px_rgba(0,0,0,0.18)] group-hover:scale-[1.04] transition-transform duration-500"
+                />
+                <span className="pointer-events-none absolute inset-x-0 -bottom-1 text-center font-hand text-[15px] text-stone-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  AIGC 产出
+                </span>
               </motion.div>
 
               {/* ========================================================

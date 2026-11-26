@@ -1,4 +1,4 @@
-﻿﻿﻿﻿import React, { useState, useMemo, useEffect, useRef } from 'react';
+﻿﻿﻿﻿﻿﻿﻿﻿import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { ScatteredFolderHero } from './components/ScatteredFolderHero';
 import { ChapterPages } from './components/ChapterPages';
 import { StickyBottomFolderTabs, FolderTab } from './components/StickyBottomFolderTabs';
@@ -87,6 +87,18 @@ export default function App() {
         setTimeout(() => {
           setActiveHighlightedId(null);
         }, 2500);
+      }
+    }, 60);
+  };
+
+  const handleOpenAigcPage = () => {
+    // AIGC 页属于 interaction 分组：当前筛选下不存在时先切回全部
+    if (!filteredChapters.some((c) => c.id === 'aigc-works')) setActiveTab('all');
+    setTimeout(() => {
+      const el = document.getElementById('chapter-aigc-works');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveSectionId('chapter-aigc-works');
       }
     }, 60);
   };
@@ -224,6 +236,7 @@ export default function App() {
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           onSelectProjectCard={handleScrollToProject}
+          onOpenAigcPage={handleOpenAigcPage}
           activeProjectInView={activeHighlightedId || undefined}
         />
 

@@ -1,4 +1,4 @@
-﻿export type ChapterGroup = 'tools' | 'interaction';
+﻿﻿﻿﻿export type ChapterGroup = 'tools' | 'interaction';
 
 export interface ChapterSection {
   id: string;
@@ -62,6 +62,8 @@ export interface Chapter {
   inlineList?: boolean;
   /** 画廊式三列布局：左列介绍+图片轮播、中列视频、右列列表导航 */
   showcase?: boolean;
+  /** 纯视频横排页：只渲染标题与横向排列的 9:16 视频；src 为 null 时渲染占位卡 */
+  videoRow?: { src: string | null; caption?: string }[];
   coreValue: string;
   /** 介绍区背景段落（未配置则不渲染该段落） */
   background?: string;
@@ -354,6 +356,25 @@ export const CHAPTERS: Chapter[] = [
         ],
       },
     ],
+  },
+  {
+    id: 'aigc-works',
+    roman: 'V',
+    number: '05',
+    title: '一些AIGC产出',
+    tabLabel: 'AIGC 产出',
+    tabActive: 'AIGC WORKS',
+    group: 'interaction',
+    coreValue: '',
+    meta: [],
+    // 横向排列的 9:16 视频，src 为 null 渲染为占位卡
+    videoRow: [
+      { src: '/assets/aigc/01.mp4', caption: '异域女王' },
+      { src: '/assets/aigc/02.mp4', caption: '我们是冠军' },
+      { src: '/assets/aigc/03.mp4', caption: '勋章爵士' },
+      { src: '/assets/aigc/04.mp4', caption: '浪漫晚宴' },
+    ],
+    sections: [],
   },
 ];
 

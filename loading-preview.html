@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>loading 动画原型 — 翻找文件夹</title>
+<style>
+  :root {
+    --paper: #f7f2e7;
+    --ink: #3f3a34;
+    --folder-blue: #7fa8c9;
+    --accent: #c96f4a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background-color: #f7f2e7;
+    background-image: radial-gradient(#dedede 1.5px, transparent 1.5px);
+    background-size: 15px 15px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    color: var(--ink);
+  }
+  .scene { position: relative; width: 560px; height: 420px; }
+
+  /* ---------- 地面散落区 ---------- */
+  .floor {
+    position: absolute; left: 50%; bottom: 30px;
+    width: 520px; height: 150px;
+    transform: translateX(-50%);
+    pointer-events: none;
+  }
+  .paper {
+    position: absolute;
+    will-change: transform, opacity;
+    filter: drop-shadow(0 1px 1.5px rgba(28,25,23,.12));
+  }
+  .paper svg { display: block; }
+
+  /* ---------- 角色与文件夹 ---------- */
+  .actor {
+    position: absolute; left: 50%; bottom: 118px;
+    transform: translateX(-50%);
+    animation: bob 1.6s ease-in-out infinite;
+    transform-origin: 50% 100%;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%      { transform: translateX(-50%) translateY(-5px); }
+  }
+  /* 翻找手臂：扎进文件夹里来回掏 */
+  .arm-dig {
+    transform-origin: 78px 46px; /* 肩膀位置 */
+    animation: dig 1.15s ease-in-out infinite;
+  }
+  @keyframes dig {
+    0%, 100% { transform: rotate(12deg); }
+    45%      { transform: rotate(-26deg); }
+    70%      { transform: rotate(4deg); }
+  }
+  /* 抛掷手臂：与纸张飞出节奏同步（1.4s 一轮） */
+  .arm-toss {
+    transform-origin: 40px 48px;
+    animation: toss 1.4s ease-in-out infinite;
+  }
+  @keyframes toss {
+    0%, 55%, 100% { transform: rotate(0deg); }
+    70%            { transform: rotate(-38deg); }
+    82%            { transform: rotate(16deg); }
+  }
+  /* 头部跟手摆 */
+  .head {
+    transform-origin: 58px 38px;
+    animation: headbob 1.15s ease-in-out infinite;
+  }
+  @keyframes headbob {
+    0%, 100% { transform: rotate(3deg); }
+    45%      { transform: rotate(-5deg); }
+  }
+  /* 文件夹微微颤动 */
+  .folder {
+    transform-origin: 50% 100%;
+    animation: shake 1.15s ease-in-out infinite;
+  }
+  @keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    30%      { transform: rotate(-0.8deg); }
+    60%      { transform: rotate(0.7deg); }
+  }
+
+  /* ---------- loading 文案 ---------- */
+  .label {
+    position: absolute; left: 50%; bottom: -8px;
+    transform: translateX(-50%);
+    font-size: 13px; letter-spacing: .3em; color: #8a8377;
+    white-space: nowrap;
+  }
+  .label span { animation: blink 1.4s infinite; }
+  .label span:nth-child(2) { animation-delay: .2s; }
+  .label span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%, 100% { opacity: .2; } 50% { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arm-dig, .arm-toss, .head, .folder, .actor, .label span { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="scene" id="scene">
+  <!-- 散落的纸张收集层 -->
+  <div class="floor" id="floor"></div>
+
+  <!-- 角色 + 文件夹（手绘贴纸风） -->
+  <svg class="actor" width="240" height="180" viewBox="0 0 240 180">
+    <g class="folder">
+      <!-- 文件夹：与你首页蓝色文件夹同款配色 -->
+      <path d="M88 138 L88 96 Q88 90 94 90 L118 90 L126 80 Q128 77 132 77 L186 77 Q192 77 192 83 L192 138 Q192 144 186 144 L94 144 Q88 144 88 138 Z"
+            fill="#a8c4dc"/>
+      <path d="M92 112 L188 112 L184 138 Q184 142 180 142 L96 142 Q92 142 92 138 Z"
+            fill="#7fa8c9"/>
+      <!-- 探出头的文件 -->
+      <rect x="112" y="72" width="26" height="20" rx="2" fill="#fdfaf2" transform="rotate(-8 125 82)"/>
+      <rect x="140" y="70" width="26" height="22" rx="2" fill="#f5efdf" transform="rotate(5 153 81)"/>
+    </g>
+
+    <!-- 人物：跪在文件夹左侧翻找 -->
+    <!-- 腿 -->
+    <path d="M42 158 Q54 150 70 156 L74 164 L40 164 Z" fill="#e8e0cf"/>
+    <!-- 身体 -->
+    <path d="M48 96 Q46 88 54 86 L78 86 Q86 88 84 98 L80 130 Q79 136 72 136 L58 136 Q52 136 52 130 Z"
+          fill="#fdfaf2" stroke="#3f3a34" stroke-width="1.6"/>
+    <!-- 抛纸手臂（左） -->
+    <g class="arm-toss">
+      <path d="M52 92 Q38 82 30 68" fill="none" stroke="#3f3a34" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="29" cy="66" r="4.5" fill="#f2c9a8"/>
+    </g>
+    <!-- 翻找手臂（右，扎进文件夹） -->
+    <g class="arm-dig">
+      <path d="M80 94 Q94 100 102 108" fill="none" stroke="#3f3a34" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="103" cy="109" r="4.5" fill="#f2c9a8"/>
+    </g>
+    <!-- 头 -->
+    <g class="head">
+      <circle cx="62" cy="66" r="20" fill="#fdfaf2" stroke="#3f3a34" stroke-width="1.6"/>
+      <!-- 头发呆毛 -->
+      <path d="M58 46 Q62 40 68 45" fill="none" stroke="#3f3a34" stroke-width="2" stroke-linecap="round"/>
+      <!-- 表情：认真翻找（眯眼） -->
+      <path d="M54 64 l5 2" stroke="#3f3a34" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M66 64 l5 2" stroke="#3f3a34" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M59 72 q4 2 7 0" fill="none" stroke="#3f3a34" stroke-width="1.4" stroke-linecap="round"/>
+      <!-- 腮红 -->
+      <circle cx="52" cy="70" r="2.6" fill="#f2b8a0" opacity=".7"/>
+      <circle cx="72" cy="70" r="2.6" fill="#f2b8a0" opacity=".7"/>
+    </g>
+  </svg>
+
+  <div class="label">加载中<span>.</span><span>.</span><span>.</span></div>
+</div>
+
+<script>
+(() => {
+  const floor = document.getElementById('floor');
+  const scene = document.getElementById('scene');
+  const MAX = 16;                 // 地面最多同时几张
+  const SPAWN = 700;              // 每 700ms 飞出一张
+  const PALETTE = ['#fdfaf2', '#f5efdf', '#eef3f7'];
+
+  // 一张小纸片：白纸 + 几行"字"
+  function makePaper() {
+    const w = 34 + Math.random() * 16, h = w * 1.3;
+    const c = PALETTE[(Math.random() * PALETTE.length) | 0];
+    const d = document.createElement('div');
+    d.className = 'paper';
+    d.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+      <rect width="${w}" height="${h}" rx="2.5" fill="${c}" stroke="#d8d2c4" stroke-width="0.8"/>
+      ${[0.22, 0.42, 0.62].map(p =>
+        `<rect x="${w * 0.16}" y="${h * p}" width="${w * (0.5 + Math.random() * 0.3)}" height="2" rx="1" fill="#c9c2b2"/>`
+      ).join('')}
+    </svg>`;
+    return d;
+  }
+
+  // 从文件夹口抛出：抛物线 → 落地定格
+  function tossPaper() {
+    const p = makePaper();
+    floor.appendChild(p);
+
+    // 起点：文件夹口（scene 中心上方）
+    const sx = 230, sy = 60;
+    // 终点：地面散落区
+    const ex = sx + (Math.random() - 0.5) * 380;
+    const ey = 330 + Math.random() * 40;
+    const rot = (Math.random() - 0.5) * 70;
+    const arc = -(90 + Math.random() * 70);   // 抛物线顶点向上
+    const dur = 620 + Math.random() * 250;
+
+    p.style.left = sx + 'px';
+    p.style.top = sy + 'px';
+    p.style.zIndex = 5 + ((Math.random() * 10) | 0);
+
+    p.animate([
+      { transform: 'translate(0,0) rotate(0deg)', opacity: 0 },
+      { transform: `translate(${(ex - sx) * 0.4}px, ${arc * 0.7}px) rotate(${rot * 0.5}deg)`, opacity: 1, offset: 0.35 },
+      { transform: `translate(${ex - sx}px, ${ey - sy}px) rotate(${rot}deg)`, offset: 1 }
+    ], { duration: dur, easing: 'cubic-bezier(.3,.4,.6,1)', fill: 'forwards' })
+    .onfinish = () => {
+      // 落地小弹跳
+      p.animate([
+        { transform: `translate(${ex - sx}px, ${ey - sy}px) rotate(${rot}deg) scale(1)` },
+        { transform: `translate(${ex - sx}px, ${ey - sy}px) rotate(${rot}deg) scale(.92, 1.04)`, offset: .4 },
+        { transform: `translate(${ex - sx}px, ${ey - sy}px) rotate(${rot}deg) scale(1)` }
+      ], { duration: 180, easing: 'ease-out', fill: 'forwards' });
+    };
+  }
+
+  // 满地后：波浪式清场重来
+  function clearFloor() {
+    const papers = [...floor.children];
+    papers.forEach((p, i) => {
+      p.animate([
+        { opacity: 1 },
+        { opacity: 0, transform: (p.style.transform || '') + ' translateY(14px)' }
+      ], { duration: 380, delay: i * 28, fill: 'forwards', easing: 'ease-in' })
+      .onfinish = () => p.remove();
+    });
+  }
+
+  setInterval(tossPaper, SPAWN);
+  setInterval(() => { if (floor.children.length >= MAX) clearFloor(); }, SPAWN * 4);
+})();
+</script>
+</body>
+</html>

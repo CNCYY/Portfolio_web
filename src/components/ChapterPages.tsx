@@ -1,6 +1,6 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { ChevronDown, Github } from 'lucide-react';
+import { ChevronDown, Github, Volume2 } from 'lucide-react';
 import { Chapter, ChapterSection } from '../data/chapters';
 import { ImageCompare } from './ImageCompare';
 import { Gallery } from './Gallery';
@@ -199,7 +199,53 @@ interface Props {
   chapters: Chapter[];
 }
 
+/**
+ * AIGC 视频卡：默认静音自动循环预览；点击后开启声音并显示原生控制条（可播放/暂停、拖动进度），
+ * 同一时刻只允许一个视频发声。
+ */
+const AigcVideo: React.FC<{ src: string; active: boolean; onActivate: () => void }> = ({
+  src,
+  active,
+  onActivate,
+}) => {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.muted = !active;
+    if (active) void el.play().catch(() => {});
+  }, [active]);
+
+  return (
+    <div className="group relative w-full h-full">
+      <video
+        ref={ref}
+        src={src}
+        className="w-full h-full object-cover cursor-pointer"
+        autoPlay
+        muted
+        loop
+        playsInline
+        controls={active}
+        onClick={onActivate}
+      />
+      {!active && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <span className="inline-flex items-center gap-1 rounded-full bg-stone-900/65 px-2 py-1 font-sans text-[10px] text-white">
+            <Volume2 className="w-3 h-3" />
+            点击播放声音
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export const ChapterPages: React.FC<Props> = ({ chapters }) => {
+  // AIGC 页当前开启声音的视频下标（null 表示全部静音预览）
+  const [activeAigc, setActiveAigc] = useState<number | null>(null);
+
   // 每个大页默认展开第一个子项
   const [expanded, setExpanded] = useState<Record<string, string | null>>(() => {
     const initial: Record<string, string | null> = {};
@@ -526,6 +572,63 @@ export const ChapterPages: React.FC<Props> = ({ chapters }) => {
             })}
           </div>
         );
+
+        // 纯视频横排页（最后一页）：只有一个标题，下方横向排列 9:16 视频，无背景装饰
+        if (ch.videoRow) {
+          return (
+            <section
+              key={ch.id}
+              id={`chapter-${ch.id}`}
+              className="dot-grid-soft snap-start snap-always min-h-screen w-full flex items-center pt-10 pb-28 pr-[34px] sm:pr-[42px]"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, amount: 0.2 }}
+                transition={{ duration: 0.6, ease: 'easeOut' }}
+                className="max-w-7xl mx-auto px-6 w-full"
+              >
+                <h3 className="text-[40px] sm:text-[48px] font-bold text-[#514961] leading-tight">
+                  {ch.title}
+                </h3>
+
+                <div className="mt-10 flex gap-3 sm:gap-6 overflow-x-auto no-scrollbar pb-2">
+                  {ch.videoRow.map(({ src, caption }, i) => (
+                    <div key={i} className="shrink-0 w-[38vw] sm:w-auto sm:flex-1 sm:min-w-0 flex flex-col">
+                      <div
+                        className={`aspect-[9/16] max-h-[70vh] rounded-xl overflow-hidden bg-stone-50 flex items-center justify-center ${
+                          src ? 'border border-stone-200' : 'border border-dashed border-stone-300'
+                        }`}
+                      >
+                        {src ? (
+                          <AigcVideo
+                            src={src}
+                            active={activeAigc === i}
+                            onActivate={() => setActiveAigc((prev) => (prev === i ? null : i))}
+                          />
+                        ) : (
+                          <span className="font-sans text-[11px] uppercase tracking-widest text-stone-400">
+                            9:16 · 0{i + 1}
+                          </span>
+                        )}
+                      </div>
+                      {(caption || !src) && (
+                        <div className="mt-3 flex items-baseline gap-2">
+                          <span className="font-sans text-[11px] tracking-widest text-stone-400">
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          {caption && (
+                            <span className="text-[13px] font-medium text-stone-700">{caption}</span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </section>
+          );
+        }
 
         // 画廊式三列布局（第四页）：左列介绍+图片轮播+进度指示、中列视频、右列列表导航
         if (ch.showcase) {
